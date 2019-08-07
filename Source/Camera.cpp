@@ -33,5 +33,5 @@ mat4 Camera::GetViewProjectionMatrix() const
 
 mat4 Camera::GetProjectionMatrix() const
 {
-	return perspective(45.0f, 4.0f / 3.0f, 0.1f, 1000.0f);
+	return perspective(45.0f, 4.0f / 3.0f, 0.1f, 10000.0f);
 }

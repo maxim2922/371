@@ -6,5 +6,5 @@ out vec3 color;
 void main()
 {
 	// set the fragment color to the interpolated vertex color
-	color = vec3(1.0f, 0.0f, 0.0f);
+	color = vec3(0.2f, 0.4f, 0.4f);
 }

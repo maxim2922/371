@@ -216,36 +216,32 @@ glm::mat4 Animation::GetAnimationWorldMatrix() const
 	//           Finally concatenate the interpolated transforms into a single
 	//           world transform and return it.
 
-	//return mat4(1.0f);
+	int key1 = 0, key2 = 0;
+	float normalizedTime = 0.0f;
 
-	int t;
-	for (int i = 0; i < (mKey.size() - 1); i++)
+	for (int i = 1; i < (int) mKey.size(); i++)
 	{
-		if (mCurrentTime > mKeyTime[i] && mCurrentTime < mKeyTime[i + 1])
-			t = i;
+		if (mCurrentTime < mKeyTime[i])
+		{
+			key1 = i - 1;
+			key2 = i;
+			normalizedTime = (mCurrentTime - mKeyTime[key1]) / (mKeyTime[key2] - mKeyTime[key1]);
+		}
 	}
 
+	vec3 position = spline.GetPosition(key1 + normalizedTime);
+
+	//glm::mat4 scalingMatrix = glm::scale(glm::mat4(1.0f), glm::mix(mKey[t].GetScaling(), mKey[t + 1].GetScaling(), (mCurrentTime - mKeyTime[t]) / (mKeyTime[t + 1] - mKeyTime[t])));
+
+	//quat q1 = glm::angleAxis(radians(mKey[t].GetRotationAngle()), mKey[t].GetRotationAxis());
+	//quat q2 = glm::angleAxis(radians(mKey[t + 1].GetRotationAngle()), mKey[t + 1].GetRotationAxis());
+	//quat q3 = glm::slerp(q1, q2, (mCurrentTime - mKeyTime[t]) / (mKeyTime[t + 1] - mKeyTime[t]));
 
 
-	glm::mat4 scalingMatrix = glm::scale(glm::mat4(1.0f), glm::mix(mKey[t].GetScaling(), mKey[t + 1].GetScaling(), (mCurrentTime - mKeyTime[t]) / (mKeyTime[t + 1] - mKeyTime[t])));
+	//glm::mat4 rotationMatrix = glm::toMat4(q3);
 
-	quat q1 = glm::angleAxis(radians(mKey[t].GetRotationAngle()), mKey[t].GetRotationAxis());
-	quat q2 = glm::angleAxis(radians(mKey[t + 1].GetRotationAngle()), mKey[t + 1].GetRotationAxis());
-	quat q3 = glm::slerp(q1, q2, (mCurrentTime - mKeyTime[t]) / (mKeyTime[t + 1] - mKeyTime[t]));
+	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), position);
 
 
-	glm::mat4 rotationMatrix = glm::toMat4(q3);
-
-	
-
-
-	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::mix(mKey[t].GetPosition(), mKey[t + 1].GetPosition(), (mCurrentTime - mKeyTime[t]) / (mKeyTime[t + 1] - mKeyTime[t])));
-
-
-
-
-	mat4 worldMatrix(1.0f);
-
-
-	return translationMatrix * rotationMatrix * scalingMatrix;
+	return translationMatrix;
 }
