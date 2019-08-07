@@ -93,7 +93,7 @@ void ParticleSystem::Update(float dt)
 		
 		//Particle->velocity = mpDescriptor->velocity + EventManager::GetRandomFloat(0.0f, mpDescriptor->velocityAngleRandomness);
 		vec4 v = vec4(newParticle->velocity, 0);
-		mat4 r = glm::rotate(mat4(1.0f), glm::radians(EventManager::GetRandomFloat(0.0f,mpDescriptor->velocityAngleRandomness)),
+		mat4 r = glm::rotate(mat4(1.0f), glm::radians(EventManager::GetRandomFloat(0.0f,360.0f)),
 			normalize(cross(newParticle->velocity,vec3(1.0f,0.0f,0.0f))));
 		mat4 r2 = glm::rotate(mat4(1.0f), glm::radians(EventManager::GetRandomFloat(0.0f,360.0f)) , normalize(newParticle->velocity));
 		newParticle->velocity = vec3(r2*r*v);
@@ -135,7 +135,7 @@ void ParticleSystem::Update(float dt)
 			p->billboard.color = mix(mpDescriptor->midColor,mpDescriptor->endColor ,r);
 		}
 		p->billboard.size += dt*mpDescriptor->sizeGrowthVelocity;
-		p->velocity += mpDescriptor->acceleration*dt;
+		p->velocity += p->velocity*(-2*dt);
                 
         
         // ...

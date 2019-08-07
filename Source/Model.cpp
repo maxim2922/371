@@ -15,6 +15,8 @@
 #include "ParticleSystem.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/common.hpp>
+#include <string>
+#include "TextureLoader.h"
 
 using namespace std;
 using namespace glm;
@@ -114,6 +116,18 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
             
             mAnimation = World::GetInstance()->FindAnimation(animName);
 		}
+		else if (token[0] == "texturePath")
+		{
+			assert(token.size() > 2);
+			assert(token[1] == "=");
+			ci_string animName = token[2].substr(1, token[2].length() - 2);
+
+			mTextureID = TextureLoader::LoadTexture(animName.c_str());
+
+			//mTextureID = TextureLoader::LoadTexture("../Assets/Textures/Particle.jpg");
+			//mTextureID = TextureLoader::LoadTexture(token[2].c_str());
+			mTextureValid = true;
+		}
         else if (token[0] == "particleemitter")
         {
             assert(token.size() > 2);
@@ -141,21 +155,24 @@ glm::mat4 Model::GetWorldMatrix() const
 	// @TODO 2 - You must build the world matrix from the position, scaling and rotation informations
     //           If the model has an animation, get the world transform from the animation.
 	mat4 worldMatrix(1.0f);
+	mat4 t(1.0f);
 
     // Solution TRS
 #if 1
     if (mAnimation)
-    {
-        // Get world transform from animation key frames / current time
-        worldMatrix = mAnimation->GetAnimationWorldMatrix();
+   {
+        // Get translation transform from animation key frames / current time
+		 t = mAnimation->GetAnimationWorldMatrix();
     }
-    else
-    {
-        mat4 t = glm::translate(mat4(1.0f), mPosition);
+	else
+	{
+		 t = glm::translate(mat4(1.0f), mPosition);
+	}
+	
         mat4 r = glm::rotate(mat4(1.0f), glm::radians(mRotationAngleInDegrees), mRotationAxis);
         mat4 s = glm::scale(mat4(1.0f), mScaling);
-        worldMatrix = t * r * s;
-    }
+       worldMatrix = t *  r * s;
+    
 #endif
     
 	return worldMatrix;

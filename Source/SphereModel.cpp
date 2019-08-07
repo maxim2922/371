@@ -9,6 +9,8 @@
 
 #include "SphereModel.h"
 #include "Renderer.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 using namespace glm;
 
@@ -1278,46 +1280,70 @@ SphereModel::SphereModel(vec3 size) : Model()
         { vec3(0.173648, -0.000000, -0.984808), vec3(0.173648, -0.000000, -0.984808), vec3(1.0f, 0.05f, 0.05f) },
         { vec3(0.000000, 0.000000, -1.000000), vec3(0.000000, 0.000000, -1.000000), vec3(1.0f, 0.05f, 0.05f) },
     };
+	std::vector<Vertex2> vertexBuffer2;
+	numOfVertices = sizeof(vertexBuffer) / sizeof(Vertex);
+	float u;
+	float v;
+	vec3 p;
 
-    numOfVertices = sizeof(vertexBuffer) / sizeof(Vertex);
+	for (int i = 0; i < numOfVertices; i++)
+	{
+		p = normalize(vertexBuffer[i].position);
+		u = 0.5f + atan2(-p.z, -p.x) / (2 * M_PI);
+		v = 0.5f - asin(-p.y) / (M_PI);
+		vec2 uv = vec2(u, v);
+		Vertex2 v2 = { p, vertexBuffer[i].normal, vertexBuffer[i].color, uv };
+		vertexBuffer2.push_back(v2);
+	}
 
-    glGenVertexArrays(1, &mVAO);
-    glBindVertexArray(mVAO);
-    
-    glGenBuffers(1, &mVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, mVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBuffer), vertexBuffer, GL_STATIC_DRAW);
-    
-    // 1st attribute buffer : vertex Positions
-    glVertexAttribPointer(  0,              // attribute. No particular reason for 0, but must match the layout in the shader.
-                          3,              // size
-                          GL_FLOAT,       // type
-                          GL_FALSE,       // normalized?
-                          sizeof(Vertex), // stride
-                          (void*)0        // array buffer offset
-                          );
-    glEnableVertexAttribArray(0);
 
-    // 2nd attribute buffer : vertex normal
-    glVertexAttribPointer(  1,
-                          3,
-                          GL_FLOAT,
-                          GL_FALSE,
-                          sizeof(Vertex),
-                          (void*)sizeof(vec3)    // Normal is Offseted by vec3 (see class Vertex)
-                          );
-    glEnableVertexAttribArray(1);
+	glGenVertexArrays(1, &mVAO);
+	glBindVertexArray(mVAO);
 
-    
-    // 3rd attribute buffer : vertex color
-    glVertexAttribPointer(  2,
-                          3,
-                          GL_FLOAT,
-                          GL_FALSE,
-                          sizeof(Vertex),
-                          (void*) (2* sizeof(vec3)) // Color is Offseted by 2 vec3 (see class Vertex)
-                          );
-    glEnableVertexAttribArray(2);
+	glGenBuffers(1, &mVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex2)*vertexBuffer2.size(), vertexBuffer2.data(), GL_STATIC_DRAW);
+
+	// 1st attribute buffer : vertex Positions
+	glVertexAttribPointer(0,              // attribute. No particular reason for 0, but must match the layout in the shader.
+		3,              // size
+		GL_FLOAT,       // type
+		GL_FALSE,       // normalized?
+		sizeof(Vertex2), // stride
+		(void*)0        // array buffer offset
+	);
+	glEnableVertexAttribArray(0);
+
+	// 2nd attribute buffer : vertex normal
+	glVertexAttribPointer(1,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		sizeof(Vertex2),
+		(void*)sizeof(vec3)    // Normal is Offseted by vec3 (see class Vertex)
+	);
+	glEnableVertexAttribArray(1);
+
+
+	// 3rd attribute buffer : vertex color
+	glVertexAttribPointer(2,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		sizeof(Vertex2),
+		(void*)(2 * sizeof(vec3)) // Color is Offseted by 2 vec3 (see class Vertex)
+	);
+	glEnableVertexAttribArray(2);
+
+	//4th attribute buffer : UV
+	glVertexAttribPointer(3,
+		2,
+		GL_FLOAT,
+		GL_FALSE,
+		sizeof(Vertex2),
+		(void*)(3 * sizeof(vec3)) // Color is Offseted by 2 vec3 (see class Vertex)
+	);
+	glEnableVertexAttribArray(3);
 }
 
 SphereModel::~SphereModel()
@@ -1334,7 +1360,13 @@ void SphereModel::Update(float dt)
 
 void SphereModel::Draw()
 {
-    // Draw the Vertex Buffer
+	if (mTextureValid)
+	{
+		GLuint textureLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "myTextureSampler");
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, mTextureID);
+	}
+	// Draw the Vertex Buffer
     // Note this draws a Sphere
     // The Model View Projection transforms are computed in the Vertex Shader
     glBindVertexArray(mVAO);

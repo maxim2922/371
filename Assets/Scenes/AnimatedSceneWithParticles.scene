@@ -1,112 +1,355 @@
-# This is a comment
+# -------------Animations of all Planets---------------------
 [AnimationKey]
-name     = "KeyForth"
-position = 0.0 1.0 0.0
-rotation =  1.0f 0.0f 0.0f 0.0f
-
+name     = "KeyCycleMercury1"
+position = 5.0 2.0 0.0
 
 [AnimationKey]
-name     = "KeyBack"
-position =  0.0 1.0 0.0
-rotation =  1.0f 0.0f 0.0f 90.0f
+name     = "KeyCycleMercury2"
+position = 3.53 2.0 3.53
+
+[AnimationKey]
+name     = "KeyCycleMercury3"
+position = 0.0 2.0 5.0
+
+[AnimationKey]
+name     = "KeyCycleMercury4"
+position = -3.53 2.0 3.53
+
+[AnimationKey]
+name     = "KeyCycleMercury5"
+position = -5.0 2.0 0.0
+
+[AnimationKey]
+name     = "KeyCycleMercury6"
+position = -3.53 2.0 -3.53
+
+[AnimationKey]
+name     = "KeyCycleMercury7"
+position = 0.0 2.0 -5.0
+
+[AnimationKey]
+name     = "KeyCycleMercury8"
+position = 3.53 2.0 -3.53
 
 [Animation]
-name     = "BackAndForth"
-key      = "KeyForth"     time = 0.0f
-key      = "KeyBack"      time = 2.0f
-key      = "KeyForth"     time = 4.0f
+name     = "CycleAnimMercury"
+key      = "KeyCycleMercury1"  time = 0.0f
+key      = "KeyCycleMercury2"  time = 1.1f
+key      = "KeyCycleMercury3"  time = 2.2f
+key      = "KeyCycleMercury4"  time = 3.3f
+key      = "KeyCycleMercury5"  time = 4.4f
+key      = "KeyCycleMercury6"  time = 5.5f
+key      = "KeyCycleMercury7"  time = 6.6f
+key      = "KeyCycleMercury8"  time = 7.7f
+key      = "KeyCycleMercury1"  time = 8.8f
 
 [AnimationKey]
-name     = "KeyCycle1"
-position = 10.0 2.0 0.0
+name     = "KeyCycleVenus1"
+position = 9.6 2.0 0.0
 
 [AnimationKey]
-name     = "KeyCycle2"
-position = 7.07 2.0 7.07
+name     = "KeyCycleVenus2"
+position = 6.78 2.0 6.78
 
 [AnimationKey]
-name     = "KeyCycle3"
-position = 0.0 2.0 10.0
+name     = "KeyCycleVenus3"
+position = 0.0 2.0 9.6
 
 [AnimationKey]
-name     = "KeyCycle4"
-position = -7.07 2.0 7.07
+name     = "KeyCycleVenus4"
+position = -6.78 2.0 6.78
 
 [AnimationKey]
-name     = "KeyCycle5"
-position = -10.0 2.0 0.0
+name     = "KeyCycleVenus5"
+position = -9.6 2.0 0.0
 
 [AnimationKey]
-name     = "KeyCycle6"
-position = -7.07 2.0 -7.07
+name     = "KeyCycleVenus6"
+position = -6.78 2.0 -6.78
 
 [AnimationKey]
-name     = "KeyCycle7"
-position = 0.0 2.0 -10.0
+name     = "KeyCycleVenus7"
+position = 0.0 2.0 -9.6
 
 [AnimationKey]
-name     = "KeyCycle8"
-position = 7.07 2.0 -7.07
+name     = "KeyCycleVenus8"
+position = 6.78 2.0 -6.78
 
 [Animation]
-name     = "CycleAnim"
-key      = "KeyCycle1"  time = 0.0f
-key      = "KeyCycle2"  time = 1.0f
-key      = "KeyCycle3"  time = 2.0f
-key      = "KeyCycle4"  time = 3.0f
-key      = "KeyCycle5"  time = 4.0f
-key      = "KeyCycle6"  time = 5.0f
-key      = "KeyCycle7"  time = 6.0f
-key      = "KeyCycle8"  time = 7.0f
-key      = "KeyCycle1"  time = 8.0f
+name     = "CycleAnimVenus"
+key      = "KeyCycleVenus1"  time = 0.0f
+key      = "KeyCycleVenus2"  time = 2.8f
+key      = "KeyCycleVenus3"  time = 5.6f
+key      = "KeyCycleVenus4"  time = 8.4f
+key      = "KeyCycleVenus5"  time = 11.2f
+key      = "KeyCycleVenus6"  time = 14.0f
+key      = "KeyCycleVenus7"  time = 16.8f
+key      = "KeyCycleVenus8"  time = 19.6f
+key      = "KeyCycleVenus1"  time = 22.4f
 
 [AnimationKey]
-name     = "KeyCycle11"
+name     = "KeyCycleEarth1"
+position = 13.16 2.0 0.0
+
+[AnimationKey]
+name     = "KeyCycleEarth2"
+position = 9.29 2.0 9.29
+
+[AnimationKey]
+name     = "KeyCycleEarth3"
+position = 0.0 2.0 13.16
+
+[AnimationKey]
+name     = "KeyCycleEarth4"
+position = -9.29 2.0 9.29
+
+[AnimationKey]
+name     = "KeyCycleEarth5"
+position = -13.16 2.0 0.0
+
+[AnimationKey]
+name     = "KeyCycleEarth6"
+position = -9.29 2.0 -9.29
+
+[AnimationKey]
+name     = "KeyCycleEarth7"
+position = 0.0 2.0 -13.16
+
+[AnimationKey]
+name     = "KeyCycleEarth8"
+position = 9.29 2.0 -9.29
+
+[Animation]
+name     = "CycleAnimEarth"
+key      = "KeyCycleEarth1"  time = 0.0f
+key      = "KeyCycleEarth2"  time = 4.5625f
+key      = "KeyCycleEarth3"  time = 9.125f
+key      = "KeyCycleEarth4"  time = 13.6875f
+key      = "KeyCycleEarth5"  time = 18.25f
+key      = "KeyCycleEarth6"  time = 22.8125f
+key      = "KeyCycleEarth7"  time = 27.375f
+key      = "KeyCycleEarth8"  time = 31.9375f
+key      = "KeyCycleEarth1"  time = 36.5f
+
+[AnimationKey]
+name     = "KeyCycleMars1"
 position = 20.0 2.0 0.0
 
 [AnimationKey]
-name     = "KeyCycle21"
-position = 14.07 2.0 14.07
-scaling  = 2.0f 2.0f 2.0f
+name     = "KeyCycleMars2"
+position = 14.12 2.0 14.12
 
 [AnimationKey]
-name     = "KeyCycle31"
+name     = "KeyCycleMars3"
 position = 0.0 2.0 20.0
 
 [AnimationKey]
-name     = "KeyCycle41"
-position = -14.07 2.0 14.07
-scaling  = 2.0f 2.0f 2.0f
+name     = "KeyCycleMars4"
+position = -14.12 2.0 14.12
 
 [AnimationKey]
-name     = "KeyCycle51"
+name     = "KeyCycleMars5"
 position = -20.0 2.0 0.0
 
 [AnimationKey]
-name     = "KeyCycle61"
-position = -14.07 2.0 -14.07
-scaling  = 2.0f 2.0f 2.0f
+name     = "KeyCycleMars6"
+position = -14.12 2.0 -14.12
 
 [AnimationKey]
-name     = "KeyCycle71"
+name     = "KeyCycleMars7"
 position = 0.0 2.0 -20.0
 
 [AnimationKey]
-name     = "KeyCycle81"
-position = 14.07 2.0 -14.07
-scaling  = 2.0f 2.0f 2.0f
+name     = "KeyCycleMars8"
+position = 14.12 2.0 -14.12
 
 [Animation]
-name     = "CycleAnim2"
-key      = "KeyCycle11"  time = 0.0f
-key      = "KeyCycle21"  time = 1.0f
-key      = "KeyCycle31"  time = 2.0f
-key      = "KeyCycle41"  time = 3.0f
-key      = "KeyCycle51"  time = 4.0f
-key      = "KeyCycle61"  time = 5.0f
-key      = "KeyCycle71"  time = 6.0f
-key      = "KeyCycle81"  time = 7.0f
-key      = "KeyCycle11"  time = 8.0f
+name     = "CycleAnimMars"
+key      = "KeyCycleMars1"  time = 0.0f
+key      = "KeyCycleMars2"  time = 8.5875f
+key      = "KeyCycleMars3"  time = 17.175f
+key      = "KeyCycleMars4"  time = 25.7625f
+key      = "KeyCycleMars5"  time = 34.35f
+key      = "KeyCycleMars6"  time = 42.9375f
+key      = "KeyCycleMars7"  time = 51.525f
+key      = "KeyCycleMars8"  time = 60.1125f
+key      = "KeyCycleMars1"  time = 68.7f
+
+[AnimationKey]
+name     = "KeyCycleJupiter1"
+position = 68.43.0 2.0 0.0
+
+[AnimationKey]
+name     = "KeyCycleJupiter2"
+position = 48.8 2.0 48.3
+
+[AnimationKey]
+name     = "KeyCycleJupiter3"
+position = 0.0 2.0 68.43
+
+[AnimationKey]
+name     = "KeyCycleJupiter4"
+position = -48.3 2.0 48.3
+
+[AnimationKey]
+name     = "KeyCycleJupiter5"
+position = -68.43 2.0 0.0
+
+[AnimationKey]
+name     = "KeyCycleJupiter6"
+position = -48.3 2.0 -48.3
+
+[AnimationKey]
+name     = "KeyCycleJupiter7"
+position = 0.0 2.0 -68.43
+
+[AnimationKey]
+name     = "KeyCycleJupiter8"
+position = 48.3 2.0 -48.3
+
+[Animation]
+name     = "CycleAnimJupiter"
+key      = "KeyCycleJupiter1"  time = 0.0f
+key      = "KeyCycleJupiter2"  time = 54.2f
+key      = "KeyCycleJupiter3"  time = 108.3f
+key      = "KeyCycleJupiter4"  time = 162.5f
+key      = "KeyCycleJupiter5"  time = 216.6f
+key      = "KeyCycleJupiter6"  time = 270.8f
+key      = "KeyCycleJupiter7"  time = 324.9f
+key      = "KeyCycleJupiter8"  time = 379.1f
+key      = "KeyCycleJupiter1"  time = 433.2f
+
+[AnimationKey]
+name     = "KeyCycleSaturn1"
+position = 125.41 2.0 0.0
+
+[AnimationKey]
+name     = "KeyCycleSaturn2"
+position = 88.63 2.0 88.63
+
+[AnimationKey]
+name     = "KeyCycleSaturn3"
+position = 0.0 2.0 125.41
+
+[AnimationKey]
+name     = "KeyCycleSaturn4"
+position = -88.63 2.0 88.63
+
+[AnimationKey]
+name     = "KeyCycleSaturn5"
+position = -125.41 2.0 0.0
+
+[AnimationKey]
+name     = "KeyCycleSaturn6"
+position = -88.63 2.0 -88.63
+
+[AnimationKey]
+name     = "KeyCycleSaturn7"
+position = 0.0 2.0 -125.41
+
+[AnimationKey]
+name     = "KeyCycleSaturn8"
+position = 88.63 2.0 -88.63
+
+[Animation]
+name     = "CycleAnimSaturn"
+key      = "KeyCycleSaturn1"  time = 0.0f
+key      = "KeyCycleSaturn2"  time = 134.4f
+key      = "KeyCycleSaturn3"  time = 268.8f
+key      = "KeyCycleSaturn4"  time = 403.2f
+key      = "KeyCycleSaturn5"  time = 537.6f
+key      = "KeyCycleSaturn6"  time = 672.0f
+key      = "KeyCycleSaturn7"  time = 806.4f
+key      = "KeyCycleSaturn8"  time = 940.8f
+key      = "KeyCycleSaturn1"  time = 1075.2f
+
+[AnimationKey]
+name     = "KeyCycleUranus1"
+position = 252.54 2.0 0.0
+
+[AnimationKey]
+name     = "KeyCycleUranus2"
+position = 178.0 2.0 178.0
+
+[AnimationKey]
+name     = "KeyCycleUranus3"
+position = 0.0 2.0 252.54
+
+[AnimationKey]
+name     = "KeyCycleUranus4"
+position = -178.0 2.0 178.0
+
+[AnimationKey]
+name     = "KeyCycleUranus5"
+position = -252.54 2.0 0.0
+
+[AnimationKey]
+name     = "KeyCycleUranus6"
+position = -178.0 2.0 -178.0
+
+[AnimationKey]
+name     = "KeyCycleUranus7"
+position = 0.0 2.0 -252.54
+
+[AnimationKey]
+name     = "KeyCycleUranus8"
+position = 178.0 2.0 -178.0
+
+[Animation]
+name     = "CycleAnimUranus"
+key      = "KeyCycleUranus1"  time = 0.0f
+key      = "KeyCycleUranus2"  time = 6.0f
+key      = "KeyCycleUranus3"  time = 12.0f
+key      = "KeyCycleUranus4"  time = 18.0f
+key      = "KeyCycleUranus5"  time = 24.0f
+key      = "KeyCycleUranus6"  time = 30.0f
+key      = "KeyCycleUranus7"  time = 36.0f
+key      = "KeyCycleUranus8"  time = 42.0f
+key      = "KeyCycleUranus1"  time = 48.0f
+
+[AnimationKey]
+name     = "KeyCycleNeptune1"
+position = 396.12 2.0 0.0
+
+[AnimationKey]
+name     = "KeyCycleNeptune2"
+position = 279.63 2.0 279.63
+
+[AnimationKey]
+name     = "KeyCycleNeptune3"
+position = 0.0 2.0 396.12
+
+[AnimationKey]
+name     = "KeyCycleNeptune4"
+position = -279.63 2.0 279.63
+
+[AnimationKey]
+name     = "KeyCycleNeptune5"
+position = -396.12 2.0 0.0
+
+[AnimationKey]
+name     = "KeyCycleNeptune6"
+position = -279.63 2.0 -279.63
+
+[AnimationKey]
+name     = "KeyCycleNeptune7"
+position = 0.0 2.0 -396.12
+
+[AnimationKey]
+name     = "KeyCycleNeptune8"
+position = 279.63 2.0 -279.63
+
+[Animation]
+name     = "CycleAnimNeptune"
+key      = "KeyCycleNeptune1"  time = 0.0f
+key      = "KeyCycleNeptune2"  time = 6.0f
+key      = "KeyCycleNeptune3"  time = 12.0f
+key      = "KeyCycleNeptune4"  time = 18.0f
+key      = "KeyCycleNeptune5"  time = 24.0f
+key      = "KeyCycleNeptune6"  time = 30.0f
+key      = "KeyCycleNeptune7"  time = 36.0f
+key      = "KeyCycleNeptune8"  time = 42.0f
+key      = "KeyCycleNeptune1"  time = 48.0f
 
 [ParticleDescriptor]
 name        = "Fountain"
@@ -117,7 +360,7 @@ initialRotationAngle = 0.0
 initialRotationAngleRandomness = 360.0
 initialSize = 0.1 0.1
 initialSizeRandomness = 0.1 0.1
-sizeGrowthVelocity = 1.1 1.1
+sizeGrowthVelocity = 3.1 3.1
 initialColor = 0.5 0.5 0.5 0.0
 midColor = 0.8 0.8 1.0 1.0
 endColor = 0.5 0.5 0.5 0.0
@@ -127,13 +370,6 @@ fadeOutTime = 0.7
 totalLifetime = 2.0
 totalLifetimeRandomness = 0.3
 
-[Sphere]
-name     = "Sun"
-scaling  = 1.0 1.0 1.0
-position = 0.0 1.0 0.0
-rotation = 0.0 1.0 0.0 180
-#animation = "BackAndForth"
-particleEmitter = "Fountain"
 
 [ParticleDescriptor]
 name        = "Smoke"
@@ -155,14 +391,73 @@ totalLifetime = 5.5
 totalLifetimeRandomness = 0.0
 
 [Sphere]
+name     = "Sun"
+scaling  = 3.0 3.0 3.0
+position = 0.0 1.0 0.0
+rotation = 0.0 1.0 0.0 180
+particleEmitter = "Fountain"
+texturePath = "../Assets/Textures/sun.jpg"
+
+[Sphere]
 name     = "Mercury"
-position = 10.0 2.0 0.0
-animation = "CycleAnim"
-particleEmitter = "Smoke"
+scaling  = 0.38 0.38 0.38
+position = 5.0 2.0 0.0
+rotation = 0.0 1.0 0.0 180
+animation = "CycleAnimMercury"
+texturePath = "../Assets/Textures/mercury.jpg"
 
 [Sphere]
 name     = "Venus"
-position = 5.0 2.0 10.0
-animation = "CycleAnim2"
-particleEmitter = "Smoke"
+scaling  = 0.94 0.94 0.94
+position = 9.6.0 2.0 0.0
+rotation = 0.0 1.0 0.0 180
+animation = "CycleAnimVenus"
+texturePath = "../Assets/Textures/venus.jpg"
 
+[Sphere]
+name     = "Earth"
+scaling  = 1.0 1.0 1.0
+position = 13.16 2.0 0.0
+rotation = 0.0 1.0 0.0 180
+animation = "CycleAnimEarth"
+texturePath = "../Assets/Textures/earth.jpg"
+
+[Sphere]
+name     = "Mars"
+scaling  = 0.53 0.53 0.53
+position = 20.0 2.0 0.0
+rotation = 0.0 1.0 0.0 180
+animation = "CycleAnimMars"
+texturePath = "../Assets/Textures/mars.jpg"
+
+[Sphere]
+name     = "Jupiter"
+scaling  = 11.1 11.1 11.1
+position = 68.43.0 2.0 0.0
+rotation = 0.0 1.0 0.0 180
+animation = "CycleAnimJupiter"
+texturePath = "../Assets/Textures/jupiter.jpg"
+
+[Sphere]
+name     = "Saturn"
+scaling  = 9.38 9.38 9.38
+position = 125.41 2.0 0.0
+rotation = 0.0 1.0 0.0 180
+animation = "CycleAnimSaturn"
+texturePath = "../Assets/Textures/saturn.jpg"
+
+[Sphere]
+name     = "Uranus"
+scaling  = 4.05 4.05 4.05
+position = 252.54 2.0 0.0
+rotation = 0.0 1.0 0.0 180
+animation = "CycleAnimUranus"
+texturePath = "../Assets/Textures/uranus.jpg"
+
+[Sphere]
+name     = "Neptune"
+scaling  = 3.87 3.87 3.87
+position = 396.12 2.0 10.0
+rotation = 0.0 1.0 0.0 180
+animation = "CycleAnimNeptune"
+texturePath = "../Assets/Textures/neptune.jpg"

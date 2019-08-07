@@ -52,5 +52,8 @@ protected:
     // Makes the model follow a list of Animation Keys so it's world transform changes over time
     Animation* mAnimation;
 
+	int mTextureID;
+	bool mTextureValid = false;
+
     friend class Animation;
 };
