@@ -65,22 +65,22 @@ void FirstPersonCamera::Update(float dt)
 		// A S D W for motion along the camera basis vectors
 		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W ) == GLFW_PRESS)
 		{
-			mPosition += mLookAt * dt * mSpeed;
+			mPosition += mLookAt * dt * (mSpeed + (length(mPosition)*0.2f));
 		}
 
 		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S ) == GLFW_PRESS)
 		{
-			mPosition -= mLookAt * dt * mSpeed;
+			mPosition -= mLookAt * dt * (mSpeed + (length(mPosition)*0.2f));
 		}
 
 		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D ) == GLFW_PRESS)
 		{
-			mPosition += sideVector * dt * mSpeed;
+			mPosition += sideVector * dt * (mSpeed + (length(mPosition)*0.2f));
 		}
 
 		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A ) == GLFW_PRESS)
 		{
-			mPosition -= sideVector * dt * mSpeed;
+			mPosition -= sideVector * dt * (mSpeed + (length(mPosition)*0.2f));
 		}
 	} else {
 		EventManager::EnableMouseCursor();
