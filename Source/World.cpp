@@ -34,6 +34,7 @@ using namespace std;
 using namespace glm;
 
 World* World::instance;
+FirstPersonCamera* fp = new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f));
 
 
 World::World()
@@ -41,7 +42,7 @@ World::World()
     instance = this;
 
 	// Setup Camera
-	mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));
+	mCamera.push_back(fp);
 	mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 	mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 	mCurrentCamera = 0;
@@ -116,6 +117,14 @@ World* World::GetInstance()
 
 void World::Update(float dt)
 {
+	// Read mouse button. Toggle first person if RIGHT click is detected.
+	if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+		fp->toggleMouse(true);
+	}
+	else if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
+		fp->toggleMouse(false);
+	}
+	
 	// User Inputs
 	// 0 1 2 to change the Camera
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_1 ) == GLFW_PRESS)
