@@ -202,6 +202,31 @@ void World::Draw()
 	mat4 VP = mCamera[mCurrentCamera]->GetViewProjectionMatrix();
 	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
 
+	GLuint ViewMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewTransform");
+	mat4 View = mCamera[mCurrentCamera]->GetViewMatrix();
+	glUniformMatrix4fv(ViewMatrixLocation, 1, GL_FALSE, &View[0][0]);
+
+	GLuint ProjectionMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ProjectionTransform");
+	mat4 Projection = mCamera[mCurrentCamera]->GetProjectionMatrix();
+	glUniformMatrix4fv(ProjectionMatrixLocation, 1, GL_FALSE, &Projection[0][0]);
+
+	// Get a handle for Light Attributes uniform
+	GLuint LightPositionID = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition");
+	GLuint LightColorID = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor");
+	GLuint LightAttenuationID = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation");
+
+	// Light Coefficients
+	const vec3 lightColor(1.0f, 1.0f, 1.0f);
+	const float lightKc = 0.05f;
+	const float lightKl = 0.02f;
+	const float lightKq = 0.002f;
+	const vec4 lightPosition(0.0f, 0.0f, 0.0f, 1.0f); // If w = 1.0f, we have a point light
+	//const vec4 lightPosition(0.0f, 10.0f, 20.0f, 0.0f); // If w = 0.0f, we have a directional light
+
+	glUniform4f(LightPositionID, lightPosition.x, lightPosition.y, lightPosition.z, lightPosition.w);
+	glUniform3f(LightColorID, lightColor.r, lightColor.g, lightColor.b);
+	glUniform3f(LightAttenuationID, lightKc, lightKl, lightKq);
+
 	// Draw models
 	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
 	{
