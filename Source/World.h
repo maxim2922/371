@@ -57,6 +57,8 @@ private:
     std::vector<ParticleSystem*> mParticleSystemList;
     std::vector<ParticleDescriptor*> mParticleDescriptorList;
 	unsigned int mCurrentCamera;
+	int buttonState = 1;
+	double speed = 1;
 
     BillboardList* mpBillboardList;
 };

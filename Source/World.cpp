@@ -21,6 +21,7 @@
 #include <GLFW/glfw3.h>
 #include "EventManager.h"
 #include "TextureLoader.h"
+#include "UI_elements.hpp"
 
 #include "ParticleDescriptor.h"
 #include "ParticleEmitter.h"
@@ -117,6 +118,7 @@ World* World::GetInstance()
 
 void World::Update(float dt)
 {
+	float dt2 = speed*dt;
 	// Read mouse button. Toggle first person if RIGHT click is detected.
 	if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
 		fp->toggleMouse(true);
@@ -159,12 +161,12 @@ void World::Update(float dt)
     // Update animation and keys
     for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
     {
-        (*it)->Update(dt);
+        (*it)->Update(dt2);
     }
     
     for (vector<AnimationKey*>::iterator it = mAnimationKey.begin(); it < mAnimationKey.end(); ++it)
     {
-        (*it)->Update(dt);
+        (*it)->Update(dt2);
     }
 
 
@@ -261,12 +263,95 @@ void World::Draw()
 	}
 
     Renderer::CheckForErrors();
+
+
+	UI_elements ui;
+	ui.Draw();
     
     // Draw Billboards
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     mpBillboardList->Draw();
     glDisable(GL_BLEND);
+
+
+
+	//*******************************************************
+	EventManager::GetMouseButton();
+	// Right corner button
+	if (EventManager::GetMousePositionX()<642
+		&& EventManager::GetMousePositionX()>602 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 5;
+
+	}
+
+	if (EventManager::GetMousePositionX()<582
+		&& EventManager::GetMousePositionX()>542 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 4;
+	}
+	if (EventManager::GetMousePositionX()<522
+		&& EventManager::GetMousePositionX()>482 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 3;
+	}
+	if (EventManager::GetMousePositionX()<462
+		&& EventManager::GetMousePositionX()>422 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 2;
+	}
+
+	if (EventManager::GetMousePositionX()<402
+		&& EventManager::GetMousePositionX()>362 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 1;
+	}
+
+	if (EventManager::GetMousePositionX()<342
+		&& EventManager::GetMousePositionX()>302 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 0;
+	}
+
+
+	switch (buttonState) {
+	case 0:
+		speed = 0;
+		break;
+	case 1:
+		speed = 1;
+		break;
+	case 2:
+		speed = 10;
+		break;
+
+	case 3: // bird view
+		mCurrentCamera = 0;
+		break;
+	case 4: // bird view
+		mCurrentCamera = 1;
+		break;
+	case 5: // bird view
+		mCurrentCamera = 2;
+		break;
+
+
+	default:
+		speed = 1;
+	}
 
 
 	// Restore previous shader
