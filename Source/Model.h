@@ -39,6 +39,7 @@ public:
 	glm::vec3 GetRotationAxis() const	{ return mRotationAxis; }
 	float     GetRotationAngle() const	{ return mRotationAngleInDegrees; }
     ci_string GetName()                 { return mName; }
+	glm::vec4 GetMaterialCoefficients() const { return materialCoefficients; }
 
 protected:
 	virtual bool ParseLine(const std::vector<ci_string> &token) = 0;
@@ -48,6 +49,7 @@ protected:
 	glm::vec3 mScaling;
 	glm::vec3 mRotationAxis;
 	float     mRotationAngleInDegrees;
+	glm::vec4 materialCoefficients;
 
     // Makes the model follow a list of Animation Keys so it's world transform changes over time
     Animation* mAnimation;

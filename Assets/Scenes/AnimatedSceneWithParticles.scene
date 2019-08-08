@@ -396,6 +396,7 @@ scaling  = 3.0 3.0 3.0
 position = 0.0 1.0 0.0
 rotation = 0.0 1.0 0.0 180
 particleEmitter = "Fountain"
+materialCoefficients = 1.0 0.0 0.0 0.0
 texturePath = "../Assets/Textures/sun.jpg"
 
 [Sphere]
@@ -404,6 +405,7 @@ scaling  = 0.38 0.38 0.38
 position = 5.0 2.0 0.0
 rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimMercury"
+materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/mercury.jpg"
 
 [Sphere]
@@ -412,6 +414,7 @@ scaling  = 0.94 0.94 0.94
 position = 9.6.0 2.0 0.0
 rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimVenus"
+materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/venus.jpg"
 
 [Sphere]
@@ -420,6 +423,7 @@ scaling  = 1.0 1.0 1.0
 position = 13.16 2.0 0.0
 rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimEarth"
+materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/earth.jpg"
 
 [Sphere]
@@ -428,6 +432,7 @@ scaling  = 0.53 0.53 0.53
 position = 20.0 2.0 0.0
 rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimMars"
+materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/mars.jpg"
 
 [Sphere]
@@ -436,6 +441,7 @@ scaling  = 11.1 11.1 11.1
 position = 68.43.0 2.0 0.0
 rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimJupiter"
+materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/jupiter.jpg"
 
 [Sphere]
@@ -444,6 +450,7 @@ scaling  = 9.38 9.38 9.38
 position = 125.41 2.0 0.0
 rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimSaturn"
+materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/saturn.jpg"
 
 [Sphere]
@@ -452,6 +459,7 @@ scaling  = 4.05 4.05 4.05
 position = 252.54 2.0 0.0
 rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimUranus"
+materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/uranus.jpg"
 
 [Sphere]
@@ -460,4 +468,5 @@ scaling  = 3.87 3.87 3.87
 position = 396.12 2.0 10.0
 rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimNeptune"
+materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/neptune.jpg"
