@@ -21,6 +21,7 @@ class AnimationKey;
 class ParticleSystem;
 class ParticleDescriptor;
 class BSpline;
+class UI_elements;
 
 class World
 {
@@ -45,11 +46,14 @@ public:
     void RemoveParticleSystem(ParticleSystem* particleSystem);
     void AddParticleDescriptor(ParticleDescriptor* particleDescriptor);
 
+	void getButtonInteraction();
+
     
 private:
     static World* instance;
     
 	std::vector<Model*> mModel;
+	std::vector<UI_elements*> mUI;
     std::vector<Animation*> mAnimation;
     std::vector<AnimationKey*> mAnimationKey;
 	std::vector<Camera*> mCamera;

@@ -12,6 +12,7 @@
 #include "World.h"
 #include "Camera.h"
 #include <glm/gtx/transform.hpp>
+#include "TextureLoader.h"
 
 using namespace glm;
 
@@ -24,88 +25,74 @@ UI_elements::UI_elements(vec3 size) : Model()
     
    
     
-    Vertex vertexBuffer[] = {  // position,                normal,                  color
+    std::vector <Vertex2> vertexBuffer2 = {  // position,   normal,   color,     uv
 
-//
-//        { vec3(-halfSize.x, halfSize.y, center.z), vec3( 0.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f)}, // near - green
-//        { vec3(-halfSize.x,-halfSize.y, center.z), vec3( 0.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f) },
-//        { vec3( halfSize.x,-halfSize.y, center.z), vec3( 0.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f) },
-//
-//        { vec3( halfSize.x, halfSize.y, center.z), vec3( 0.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f) },
-//        { vec3(-halfSize.x, halfSize.y, center.z), vec3( 0.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f) },
-//        { vec3( halfSize.x,-halfSize.y, center.z), vec3( 0.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f)},
+
         
-        { vec3(602, 20, center.z), vec3( 0.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f)}, //1
-        { vec3(602,60, center.z), vec3( 0.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f) }, //2
-        { vec3( 642,60, center.z), vec3( 0.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f) }, //3
+        { vec3(342, 20, center.z), vec3( 0.0f, 0.0f, 1.0f),vec3(0.0f, 0.0f, 0.0f), vec2(1.0f, 0.0f)}, //1
+        { vec3(342,60, center.z), vec3( 0.0f, 0.0f, 1.0f),vec3(0.0f, 0.0f, 0.0f), vec2(0.0f, 0.0f) }, //2
+        { vec3( 382,60, center.z), vec3( 0.0f, 0.0f, 1.0f),vec3(0.0f, 0.0f, 0.0f),vec2(0.0f, 1.0f) }, //3
         
-        { vec3(642,20, center.z), vec3( 0.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f) }, //4
-        { vec3(602,20, center.z), vec3( 0.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f) }, //5
-        { vec3(642,60, center.z), vec3( 0.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f)},//6
+        { vec3(382,20, center.z), vec3( 0.0f, 0.0f, 1.0f),vec3(0.0f, 0.0f, 0.0f), vec2(1.0f, 1.0f) }, //4
+        { vec3(342,20, center.z), vec3( 0.0f, 0.0f, 1.0f),vec3(0.0f, 0.0f, 0.0f), vec2(1.0f, 0.0f) }, //5
+        { vec3(382,60, center.z), vec3( 0.0f, 0.0f, 1.0f),vec3(0.0f, 0.0f, 0.0f), vec2(0.0f, 1.0f) },//6
         
 
     };
-        numOfVertices = sizeof(vertexBuffer) / sizeof(Vertex);
- /*   for (int i=0; i<numOfVertices; ++i)
-    {
-        Vertex v;
-        v.position = vertexBuffer[i].position;
-        mVertexBuffer.push_back(v);
-    }*/
-    
-    // Create a vertex array
-    glGenVertexArrays(1, &mVAO);
-    glBindVertexArray(mVAO);
-    
-    // Upload Vertex Buffer to the GPU, keep a reference to it (mVertexBufferID)
-    glGenBuffers(1, &mVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, mVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBuffer), vertexBuffer, GL_STATIC_DRAW);
-    
-    
-    
-    // 1st attribute buffer : vertex Positions
-    glVertexAttribPointer(    0,                // attribute. No particular reason for 0, but must match the layout in the shader.
-                          3,                // size
-                          GL_FLOAT,        // type
-                          GL_FALSE,        // normalized?
-                          sizeof(Vertex), // stride
-                          (void*)0        // array buffer offset
-                          );
-    glEnableVertexAttribArray(0);
-    
-    // 2nd attribute buffer : vertex normal
-    glVertexAttribPointer(    1,
-                          3,
-                          GL_FLOAT,
-                          GL_FALSE,
-                          sizeof(Vertex),
-                          (void*)sizeof(vec3)    // Normal is Offseted by vec3 (see class Vertex)
-                          );
-    glEnableVertexAttribArray(1);
-    
-    
-    // 3rd attribute buffer : vertex color
-    glVertexAttribPointer(    2,
-                          4,
-                          GL_FLOAT,
-                          GL_FALSE,
-                          sizeof(Vertex),
-                          (void*) (2* sizeof(vec3)) // Color is Offseted by 2 vec3 (see class Vertex)
-                          );
-    glEnableVertexAttribArray(2);
-    
-    // 4th attribute buffer : vertex texture
-    //glVertexAttribPointer(    3,
-    //                      2,
-    //                      GL_FLOAT,
-    //                      GL_FALSE,
-    //                      sizeof(Vertex),
-    //                      (void*) (3* sizeof(vec3)) // Color is Offseted by 2 vec3 (see class Vertex)
-    //                      );
-    //glEnableVertexAttribArray(3);
-    
+        numOfVertices = sizeof(vertexBuffer2) / sizeof(Vertex);
+
+		glGenVertexArrays(1, &mVAO);
+		glBindVertexArray(mVAO);
+
+		glGenBuffers(1, &mVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex2)*vertexBuffer2.size(), vertexBuffer2.data(), GL_STATIC_DRAW);
+
+		// 1st attribute buffer : vertex Positions
+		glVertexAttribPointer(0,              // attribute. No particular reason for 0, but must match the layout in the shader.
+			3,              // size
+			GL_FLOAT,       // type
+			GL_FALSE,       // normalized?
+			sizeof(Vertex2), // stride
+			(void*)0        // array buffer offset
+		);
+		glEnableVertexAttribArray(0);
+
+		// 2nd attribute buffer : vertex normal
+		glVertexAttribPointer(1,
+			3,
+			GL_FLOAT,
+			GL_FALSE,
+			sizeof(Vertex2),
+			(void*)sizeof(vec3)    // Normal is Offseted by vec3 (see class Vertex)
+		);
+		glEnableVertexAttribArray(1);
+
+
+		// 3rd attribute buffer : vertex color
+		glVertexAttribPointer(2,
+			3,
+			GL_FLOAT,
+			GL_FALSE,
+			sizeof(Vertex2),
+			(void*)(2 * sizeof(vec3)) // Color is Offseted by 2 vec3 (see class Vertex)
+		);
+		glEnableVertexAttribArray(2);
+
+		//4th attribute buffer : UV
+		glVertexAttribPointer(3,
+			2,
+			GL_FLOAT,
+			GL_FALSE,
+			sizeof(Vertex2),
+			(void*)(3 * sizeof(vec3)) // Color is Offseted by 2 vec3 (see class Vertex)
+		);
+		glEnableVertexAttribArray(3);
 }
+
+
+
+
 
 UI_elements::~UI_elements()
 {
@@ -130,6 +117,14 @@ void UI_elements::Draw()
     // Draw the Vertex Buffer
     // Note this draws a unit Cube
     // The Model View Projection transforms are computed in the Vertex Shader
+
+
+	if (mTextureValid)
+	{
+		GLuint textureLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "myTextureSampler");
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, mTextureID);
+	}
     glBindVertexArray(mVAO);
     glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
@@ -138,55 +133,57 @@ void UI_elements::Draw()
     glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &identity[0][0]);
 
     GLuint ViewProjectionLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
-    mat4 viewMatrix(1.0f);
+	mat4 viewMatrix = mat4(1.0f);
     mat4 projectionMatrix = glm::ortho(0.0, 1024.0, 768.0, 0.0, -1.0, 1.0);
     mat4 viewProjectionMatrix = projectionMatrix * viewMatrix;
     glUniformMatrix4fv(ViewProjectionLocation, 1, GL_FALSE, &viewProjectionMatrix[0][0]);
     // Draw TRIANGLE #1
     glDrawArrays(GL_TRIANGLES, 0, 6); // 36 vertices: 3 * 2 * 6 (3 per triangle, 2 triangles per face, 6 faces)
     
-    viewMatrix= translate(mat4(1.0f), vec3(-60.0f,0.0f,0.0f));
-    viewProjectionMatrix = projectionMatrix * viewMatrix;
-    glUniformMatrix4fv(ViewProjectionLocation, 1, GL_FALSE, &viewProjectionMatrix[0][0]);
-        // Draw TRIANGLE #2
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    
-    
-    viewMatrix= translate(mat4(1.0f), vec3(-120.0f,0.0f,0.0f));
-    viewProjectionMatrix = projectionMatrix * viewMatrix;
-    glUniformMatrix4fv(ViewProjectionLocation, 1, GL_FALSE, &viewProjectionMatrix[0][0]);
-        // Draw TRIANGLE #3
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    
-    
-    viewMatrix= translate(mat4(1.0f), vec3(-180.0f,0.0f,0.0f));
-    viewProjectionMatrix = projectionMatrix * viewMatrix;
-    glUniformMatrix4fv(ViewProjectionLocation, 1, GL_FALSE, &viewProjectionMatrix[0][0]);
-        // Draw TRIANGLE #4
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    
-    viewMatrix= translate(mat4(1.0f), vec3(-240.0f,0.0f,0.0f));
-    viewProjectionMatrix = projectionMatrix * viewMatrix;
-    glUniformMatrix4fv(ViewProjectionLocation, 1, GL_FALSE, &viewProjectionMatrix[0][0]);
-    // Draw TRIANGLE #5
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+ //   viewMatrix= translate(mat4(1.0f), vec3(60.0f,0.0f,0.0f));
+ //   viewProjectionMatrix = projectionMatrix * viewMatrix;
+ //   glUniformMatrix4fv(ViewProjectionLocation, 1, GL_FALSE, &viewProjectionMatrix[0][0]); 
+ //      //  Draw TRIANGLE #2
+ //   glDrawArrays(GL_TRIANGLES, 0, 6);
+ //   
+ //   
+ //   viewMatrix= translate(mat4(1.0f), vec3(120.0f,0.0f,0.0f));
+ //   viewProjectionMatrix = projectionMatrix * viewMatrix;
+ //   glUniformMatrix4fv(ViewProjectionLocation, 1, GL_FALSE, &viewProjectionMatrix[0][0]);
+ //       // Draw TRIANGLE #3
+ //   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	viewMatrix = translate(mat4(1.0f), vec3(-300.0f, 0.0f, 0.0f));
-	viewProjectionMatrix = projectionMatrix * viewMatrix;
-	glUniformMatrix4fv(ViewProjectionLocation, 1, GL_FALSE, &viewProjectionMatrix[0][0]);
-	// Draw TRIANGLE #5
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-  
+ //   
+ //   viewMatrix= translate(mat4(1.0f), vec3(180.0f,0.0f,0.0f));
+ //   viewProjectionMatrix = projectionMatrix * viewMatrix;
+ //   glUniformMatrix4fv(ViewProjectionLocation, 1, GL_FALSE, &viewProjectionMatrix[0][0]);
+ //       // Draw TRIANGLE #4
+ //   glDrawArrays(GL_TRIANGLES, 0, 6);
+ //   
+ //   viewMatrix= translate(mat4(1.0f), vec3(240.0f,0.0f,0.0f));
+ //   viewProjectionMatrix = projectionMatrix * viewMatrix;
+ //   glUniformMatrix4fv(ViewProjectionLocation, 1, GL_FALSE, &viewProjectionMatrix[0][0]);
+ //   // Draw TRIANGLE #5
+ //   glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	//viewMatrix = translate(mat4(1.0f), vec3(300.0f, 0.0f, 0.0f));
+	//viewProjectionMatrix = projectionMatrix * viewMatrix;
+	//glUniformMatrix4fv(ViewProjectionLocation, 1, GL_FALSE, &viewProjectionMatrix[0][0]);
+	//// Draw TRIANGLE #6
+	//glDrawArrays(GL_TRIANGLES, 0, 6);
+ // 
 }
 
 bool UI_elements::ParseLine(const std::vector<ci_string> &token)
 {
-    if (token.empty())
-    {
-        return true;
-    }
-    else
-    {
-        return Model::ParseLine(token);
-    }
+	if (token.empty())
+	{
+		return true;
+	}
+	else
+	{
+		return Model::ParseLine(token);
+	}
+
+
 }

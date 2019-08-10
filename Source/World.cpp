@@ -29,6 +29,7 @@
 
 #include "BSpline.h"
 #include "BSplineCamera.h"
+#include <glm/gtx/transform.hpp>
 
 
 using namespace std;
@@ -230,10 +231,24 @@ void World::Draw()
 	glUniform3f(LightAttenuationID, lightKc, lightKl, lightKq);
 
 	// Draw models
+
 	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
 	{
+
 		(*it)->Draw();
 	}
+
+	for (vector<UI_elements*>::iterator it = mUI.begin(); it < mUI.end(); ++it)
+	{
+
+		(*it)->Draw();
+	}
+
+
+
+
+	
+
 
 	// Draw Path Lines
 	
@@ -242,7 +257,7 @@ void World::Draw()
 	Renderer::SetShader(SHADER_PATH_LINES);
 	glUseProgram(Renderer::GetShaderProgramID());
 
-	// Send the view projection constants to the shader
+	//// Send the view projection constants to the shader
 	VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
 	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
 
@@ -264,9 +279,22 @@ void World::Draw()
 
     Renderer::CheckForErrors();
 
+	/*mat4 identity(1.0f);
+	GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
+	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &identity[0][0]);
+	GLuint ViewProjectionLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
+	mat4 viewMatrix(1.0f);
+	mat4 projectionMatrix = glm::ortho(0.0, 1024.0, 768.0, 0.0, -1.0, 1.0);
+	mat4 viewProjectionMatrix = projectionMatrix * viewMatrix;
+	glUniformMatrix4fv(ViewProjectionLocation, 1, GL_FALSE, &viewProjectionMatrix[0][0]);
 
-	UI_elements ui;
-	ui.Draw();
+
+	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
+	{
+		if ((*it)->isUI() == true)
+			(*it)->Draw();
+	}
+*/
     
     // Draw Billboards
     glEnable(GL_BLEND);
@@ -276,82 +304,24 @@ void World::Draw()
 
 
 
-	//*******************************************************
-	EventManager::GetMouseButton();
-	// Right corner button
-	if (EventManager::GetMousePositionX()<642
-		&& EventManager::GetMousePositionX()>602 &&
-		EventManager::GetMousePositionY()<60
-		&& EventManager::GetMousePositionY()>20 &&
-		EventManager::isClicked()) {
-		buttonState = 5;
 
-	}
-
-	if (EventManager::GetMousePositionX()<582
-		&& EventManager::GetMousePositionX()>542 &&
-		EventManager::GetMousePositionY()<60
-		&& EventManager::GetMousePositionY()>20 &&
-		EventManager::isClicked()) {
-		buttonState = 4;
-	}
-	if (EventManager::GetMousePositionX()<522
-		&& EventManager::GetMousePositionX()>482 &&
-		EventManager::GetMousePositionY()<60
-		&& EventManager::GetMousePositionY()>20 &&
-		EventManager::isClicked()) {
-		buttonState = 3;
-	}
-	if (EventManager::GetMousePositionX()<462
-		&& EventManager::GetMousePositionX()>422 &&
-		EventManager::GetMousePositionY()<60
-		&& EventManager::GetMousePositionY()>20 &&
-		EventManager::isClicked()) {
-		buttonState = 2;
-	}
-
-	if (EventManager::GetMousePositionX()<402
-		&& EventManager::GetMousePositionX()>362 &&
-		EventManager::GetMousePositionY()<60
-		&& EventManager::GetMousePositionY()>20 &&
-		EventManager::isClicked()) {
-		buttonState = 1;
-	}
-
-	if (EventManager::GetMousePositionX()<342
-		&& EventManager::GetMousePositionX()>302 &&
-		EventManager::GetMousePositionY()<60
-		&& EventManager::GetMousePositionY()>20 &&
-		EventManager::isClicked()) {
-		buttonState = 0;
-	}
+	
+/*
+	GLfloat array[3];
+	glReadPixels(EventManager::GetMousePositionX(), EventManager::GetMousePositionY(), 1, 1, GL_RGB, GL_FLOAT, array);*/
 
 
-	switch (buttonState) {
-	case 0:
-		speed = 0;
-		break;
-	case 1:
-		speed = 1;
-		break;
-	case 2:
-		speed = 10;
-		break;
+	///*	int count = 0;
+	//	for (int i = 0; i < 3; i++) {
+	//		if (array[i] >= 0)
+	//			count++;
+	//	}
+	//	if (count >= 3)
+	//		buttonState = 5;*/
 
-	case 3: // bird view
-		mCurrentCamera = 0;
-		break;
-	case 4: // bird view
-		mCurrentCamera = 1;
-		break;
-	case 5: // bird view
-		mCurrentCamera = 2;
-		break;
+	getButtonInteraction();
 
 
-	default:
-		speed = 1;
-	}
 
 
 	// Restore previous shader
@@ -387,18 +357,21 @@ void World::LoadScene(const char * scene_path)
 				// Box attributes
 				CubeModel* cube = new CubeModel();
 				cube->Load(iss);
+				cube->setUI(false);
 				mModel.push_back(cube);
 			}
             else if( result == "sphere" )
             {
                 SphereModel* sphere = new SphereModel();
                 sphere->Load(iss);
+				sphere->setUI(false);
                 mModel.push_back(sphere);
             }
 			else if ( result == "animationkey" )
 			{
 				AnimationKey* key = new AnimationKey();
 				key->Load(iss);
+				key->setUI(false);
 				mAnimationKey.push_back(key);
 			}
 			else if (result == "animation")
@@ -407,10 +380,19 @@ void World::LoadScene(const char * scene_path)
 				anim->Load(iss);
 				mAnimation.push_back(anim);
 			}
+			else if (result == "ui")
+			{
+				UI_elements* ui = new UI_elements();
+				ui->Load(iss);
+				ui->setUI(true);
+				mUI.push_back(ui);
+			}
+
 			else if (result == "spline")
 			{
 				BSpline* spline = new BSpline();
 				spline->Load(iss);
+				spline->setUI(false);
 				spline->CreateVertexBuffer();
 
 				// FIXME: This is hardcoded: replace last camera with spline camera
@@ -511,4 +493,81 @@ ParticleDescriptor* World::FindParticleDescriptor(ci_string name)
         }
     }
     return nullptr;
+}
+
+void World::getButtonInteraction() {
+	EventManager::GetMouseButton();
+	if (EventManager::GetMousePositionX()<402
+		&& EventManager::GetMousePositionX()>342 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 5;
+	}
+	if (EventManager::GetMousePositionX()<462
+		&& EventManager::GetMousePositionX()>402 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 4;
+	}
+	if (EventManager::GetMousePositionX()<522
+		&& EventManager::GetMousePositionX()>462 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 3;
+	}
+
+	if (EventManager::GetMousePositionX()<582
+		&& EventManager::GetMousePositionX()>522 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 2;
+	}
+
+	if (EventManager::GetMousePositionX()<642
+		&& EventManager::GetMousePositionX()>582 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 1;
+	}
+
+	if (EventManager::GetMousePositionX()<702
+		&& EventManager::GetMousePositionX()>642 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 0;
+	}
+
+
+	switch (buttonState) {
+	case 0:
+		speed = 10;
+		break;
+	case 1:
+		speed = 1;
+		break;
+	case 2:
+		speed = 0;
+		break;
+
+	case 3: // bird view
+		mCurrentCamera = 0;
+		break;
+	case 4: // bird view
+		mCurrentCamera = 1;
+		break;
+	case 5: // bird view
+		mCurrentCamera = 2;
+		break;
+
+	default:
+		speed = 1;
+	}
+
+
 }

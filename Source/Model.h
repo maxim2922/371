@@ -33,6 +33,9 @@ public:
 	void SetPosition(glm::vec3 position);
 	void SetScaling(glm::vec3 scaling);
 	void SetRotation(glm::vec3 axis, float angleDegrees);
+	bool isUI();
+	void setUI(bool answer);
+
 
 	glm::vec3 GetPosition() const		{ return mPosition; }
 	glm::vec3 GetScaling() const		{ return mScaling; }
@@ -46,11 +49,12 @@ protected:
 
 	ci_string mName; // The model name is mainly for debugging
 	glm::vec3 mPosition;
+	glm::vec3 mtranslate;
 	glm::vec3 mScaling;
 	glm::vec3 mRotationAxis;
 	float     mRotationAngleInDegrees;
 	glm::vec4 materialCoefficients;
-
+	bool UIObject;
     // Makes the model follow a list of Animation Keys so it's world transform changes over time
     Animation* mAnimation;
 

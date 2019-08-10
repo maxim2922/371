@@ -470,3 +470,25 @@ rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimNeptune"
 materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/neptune.jpg"
+
+[UI]
+position = 362.0 40.0 0.0
+materialCoefficients = 1.0 0.0 0.0 0.0
+texturePath = "../Assets/Textures/sun.jpg"
+mtranslate = 60.0 0.0 0.0
+
+[UI]
+position = 422.0 40.0 0.0
+materialCoefficients = 1.0 0.0 0.0 0.0
+texturePath = "../Assets/Textures/sun.jpg"
+mtranslate = 0.0 0.0 0.0
+
+[UI]
+position = 482.0 40.0 0.0
+materialCoefficients = 1.0 0.0 0.0 0.0
+texturePath = "../Assets/Textures/sun.jpg"
+mtranslate = 0.0 0.0 0.0
+
+
+
+

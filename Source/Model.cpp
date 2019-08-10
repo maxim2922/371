@@ -86,6 +86,15 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
 			mPosition.y = static_cast<float>(atof(token[3].c_str()));
 			mPosition.z = static_cast<float>(atof(token[4].c_str()));
 		}
+		else if (token[0] == "mtranslate")
+		{
+			assert(token.size() > 4);
+			assert(token[1] == "=");
+
+			mtranslate.x = static_cast<float>(atof(token[2].c_str()));
+			mtranslate.y = static_cast<float>(atof(token[3].c_str()));
+			mtranslate.z = static_cast<float>(atof(token[4].c_str()));
+		}
 		else if (token[0] == "rotation")
 		{
 			assert(token.size() > 4);
@@ -202,4 +211,14 @@ void Model::SetRotation(glm::vec3 axis, float angleDegrees)
 {
 	mRotationAxis = axis;
 	mRotationAngleInDegrees = angleDegrees;
+}
+
+
+bool Model::isUI(){
+	return UIObject;
+
+}
+
+void Model::setUI(bool answer) {
+	UIObject = answer;
 }

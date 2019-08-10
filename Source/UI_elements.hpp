@@ -19,6 +19,8 @@ public:
     
     virtual void Update(float dt);
     virtual void Draw();
+
+
     
     
 protected:
@@ -33,9 +35,19 @@ private:
         glm::vec3 color;
        
     };
-    std::vector<Vertex> mVertexBuffer;
+
+	struct Vertex2
+	{
+		glm::vec3 position;
+		glm::vec3 normal;
+		glm::vec3 color;
+		glm::vec2 UV;
+	};
+
+    //std::vector<Vertex> mVertexBuffer;
     unsigned int mVAO;
     unsigned int mVBO;
     unsigned int numOfVertices;
+	
 };
 
