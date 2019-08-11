@@ -33,6 +33,7 @@ Model::~Model()
 
 void Model::Update(float dt)
 {
+	mPosition += dt * mVelocity;
 }
 
 void Model::Draw()
@@ -106,6 +107,7 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
 			mScaling.x = static_cast<float>(atof(token[2].c_str()));
 			mScaling.y = static_cast<float>(atof(token[3].c_str()));
 			mScaling.z = static_cast<float>(atof(token[4].c_str()));
+			boundingSphereRadius *= std::max(std::max(mScaling.x, mScaling.y), mScaling.z);
 		}
 		else if (token[0] == "animation")
 		{
@@ -151,6 +153,23 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
 			materialCoefficients.z = static_cast<float>(atof(token[4].c_str()));
 			materialCoefficients.w = static_cast<float>(atof(token[5].c_str()));
 		}
+		else if (token[0] == "velocity")
+		{
+			assert(token.size() > 4);
+			assert(token[1] == "=");
+
+			mVelocity.x = static_cast<float>(atof(token[2].c_str()));
+			mVelocity.y = static_cast<float>(atof(token[3].c_str()));
+			mVelocity.z = static_cast<float>(atof(token[4].c_str()));
+		}
+		else if (token[0] == "mass")
+		{
+			assert(token.size() > 2);
+			assert(token[1] == "=");
+
+			mass = static_cast<float>(atof(token[2].c_str()));
+			}
+
 		else
 		{
 			return false;
@@ -202,4 +221,12 @@ void Model::SetRotation(glm::vec3 axis, float angleDegrees)
 {
 	mRotationAxis = axis;
 	mRotationAngleInDegrees = angleDegrees;
+}
+
+void Model::SetVelocity(glm::vec3 newVelocity) {
+	mVelocity = newVelocity;
+}
+
+void Model::SetMaterialCoefficients(glm::vec4 material) {
+	materialCoefficients = material;
 }

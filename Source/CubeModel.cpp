@@ -67,6 +67,21 @@ CubeModel::CubeModel(vec3 size) : Model()
 								{ vec3(-halfSize.x, halfSize.y, halfSize.z), vec3( 0.0f, 1.0f, 0.0f), vec3(1.0f, 1.0f, 0.0f) }
 						};
 
+	numOfVertices = sizeof(vertexBuffer) / sizeof(Vertex);
+	vec3 minimum = vec3(0, 0, 0);
+	vec3 maximum = vec3(0, 0, 0);
+
+	for (int i = 0; i < numOfVertices; i++) {
+		minimum = vec3(std::min(vertexBuffer[i].position.x, minimum.x), std::min(vertexBuffer[i].position.y, minimum.y),
+			std::min(vertexBuffer[i].position.z, minimum.z));
+		maximum = vec3(std::max(vertexBuffer[i].position.x, maximum.x), std::max(vertexBuffer[i].position.y, maximum.y),
+			std::max(vertexBuffer[i].position.z, maximum.z));
+		//boundingSphereRadius = distance(minimum, maximum) / 2;
+	}
+	boundingSphereRadius = std::max(std::max(distance(minimum.x, maximum.x) / 2,
+		distance(minimum.y, maximum.y) / 2), distance(minimum.z, maximum.z) / 2);
+
+	
 	// Create a vertex array
 	glGenVertexArrays(1, &mVAO);
     glBindVertexArray(mVAO);

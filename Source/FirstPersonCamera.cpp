@@ -28,7 +28,7 @@ FirstPersonCamera::~FirstPersonCamera()
 }
 
 void FirstPersonCamera::Update(float dt)
-{
+{	
 	if (freeWill) {
 		// Prevent from having the camera move only when the cursor is within the windows
 		EventManager::DisableMouseCursor();
@@ -41,7 +41,7 @@ void FirstPersonCamera::Update(float dt)
 
 		// Mouse motion to get the variation in angle
 		mHorizontalAngle -= EventManager::GetMouseMotionX() * mAngularSpeed * dt;
-		mVerticalAngle   -= EventManager::GetMouseMotionY() * mAngularSpeed * dt;
+		mVerticalAngle -= EventManager::GetMouseMotionY() * mAngularSpeed * dt;
 
 		// Clamp vertical angle to [-85, 85] degrees
 		mVerticalAngle = std::max(-85.0f, std::min(85.0f, mVerticalAngle));
@@ -63,48 +63,49 @@ void FirstPersonCamera::Update(float dt)
 		glm::normalize(sideVector);
 
 		// A S D W for motion along the camera basis vectors
-		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W ) == GLFW_PRESS)
+		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 		{
 			mPosition += mLookAt * dt * (mSpeed + (length(mPosition)*0.2f));
 		}
 
-		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S ) == GLFW_PRESS)
+		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
 		{
 			mPosition -= mLookAt * dt * (mSpeed + (length(mPosition)*0.2f));
 		}
 
-		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D ) == GLFW_PRESS)
+		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
 		{
 			mPosition += sideVector * dt * (mSpeed + (length(mPosition)*0.2f));
 		}
 
-		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A ) == GLFW_PRESS)
+		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
 		{
 			mPosition -= sideVector * dt * (mSpeed + (length(mPosition)*0.2f));
 		}
-	} else {
+	}
+	else {
 		EventManager::EnableMouseCursor();
 
 		// Default W S D A commands. 
 		// TODO
 		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
 		{
-			mPosition += dt * mSpeed;
+			mPosition += dt * mSpeed * vec3(0.0f, 0.0f, -1.0f);
 		}
 
 		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
 		{
-			mPosition -= dt * mSpeed;
+			mPosition -= dt * mSpeed * vec3(0.0f, 0.0f, -1.0f);
 		}
 
 		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
 		{
-			mPosition += dt * mSpeed;
+			mPosition += dt * mSpeed* vec3(1.0f, 0.0f, 0.0f);
 		}
 
 		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
 		{
-			mPosition -= dt * mSpeed;
+			mPosition -= dt * mSpeed* vec3(1.0f, 0.0f, 0.0f);
 		}
 	}
 }

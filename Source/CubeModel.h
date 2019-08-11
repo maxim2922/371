@@ -34,4 +34,5 @@ private:
 
 	unsigned int mVAO;
 	unsigned int mVBO;
+	unsigned int numOfVertices;
 };
