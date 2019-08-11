@@ -28,8 +28,7 @@
 
 #include "BSpline.h"
 #include "BSplineCamera.h"
-
-
+#include "AsteroidModel.h"
 using namespace std;
 using namespace glm;
 
@@ -105,6 +104,12 @@ World::~World()
         delete *it;
     }
     mParticleDescriptorList.clear();
+	
+	for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it)
+	{
+		delete *it;
+	}
+	mSpline.clear();
 
     
 	delete mpBillboardList;
@@ -114,7 +119,7 @@ World* World::GetInstance()
 {
     return instance;
 }
-
+int lastMouseButtonState = GLFW_RELEASE;
 void World::Update(float dt)
 {
 	// Read mouse button. Toggle first person if RIGHT click is detected.
@@ -170,7 +175,58 @@ void World::Update(float dt)
 
 	// Update current Camera
 	mCamera[mCurrentCamera]->Update(dt);
+	if (lastMouseButtonState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+		mModel.push_back(new AsteroidModel(fp->GetPosition()+vec3(0,0,-0.1f), -inverse(fp->GetViewMatrix())[2], vec3(0.1f, 0.1f, 0.1f)));
+	}
+	lastMouseButtonState=glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
 
+	//Check collisions
+	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
+	{
+
+		//Intersphere collisions
+		//complexity: O(n^2)
+		for (vector<Model*>::iterator it2 = it; it2 < mModel.end(); ++it2)
+		{
+
+			//Models can't collide with themselves, and both models cant be projectiles
+			if (it != it2) 
+			{
+				Model* m1 = *it;
+				Model* m2 = *it2;
+
+				float distance = glm::distance(m1->GetPosition(), m2->GetPosition());
+				float r1 = m1->GetRadius();
+				float r2 = m2->GetRadius();
+				float totalRadii = r1 + r2;
+
+				//TODO 2 - Collisions between Models
+
+				if (distance <= totalRadii) //Collision
+				{
+					glm::vec3 collisionNormal = glm::normalize(m1->GetPosition() - m2->GetPosition());
+					glm::vec3 collisionPoint = m2->GetPosition() + r2 * collisionNormal;
+					glm::vec3 normalVelocity1 = glm::dot(m1->GetVelocity(), collisionNormal) * collisionNormal;
+					glm::vec3 normalVelocity2 = glm::dot(m2->GetVelocity(), collisionNormal) * collisionNormal;
+
+					glm::vec3 tangentMomentum1 = m1->GetVelocity() - normalVelocity1;
+					glm::vec3 tangentMomentum2 = m2->GetVelocity() - normalVelocity2;
+
+					float mass1 = m1->GetMass();
+					float mass2 = m2->GetMass();
+					glm::vec3 newNormalVelocity1 = ((mass1 - mass2) / (mass1 + mass2)) * normalVelocity1 + ((2 * mass2) / (mass1 + mass2) * normalVelocity2);
+					glm::vec3 newNormalVelocity2 = ((2 * mass1) / (mass1 + mass2)) * normalVelocity1 + ((mass2 - mass1) / (mass1 + mass2) * normalVelocity2);
+
+					m1->SetVelocity(newNormalVelocity1 + tangentMomentum1);
+					m2->SetVelocity(newNormalVelocity2 + tangentMomentum2);
+
+					}
+
+
+			}
+		}
+	}
+	
 	// Update models
 	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
 	{
@@ -227,6 +283,8 @@ void World::Draw()
 	glUniform3f(LightColorID, lightColor.r, lightColor.g, lightColor.b);
 	glUniform3f(LightAttenuationID, lightKc, lightKl, lightKq);
 
+	
+	
 	// Draw models
 	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
 	{
@@ -310,6 +368,12 @@ void World::LoadScene(const char * scene_path)
                 sphere->Load(iss);
                 mModel.push_back(sphere);
             }
+			else if (result == "asteroid")
+			{
+				AsteroidModel* asteroid = new AsteroidModel();
+				asteroid->Load(iss);
+				mModel.push_back(asteroid);
+			}
 			else if ( result == "animationkey" )
 			{
 				AnimationKey* key = new AnimationKey();

@@ -20,6 +20,7 @@ public:
 
 	virtual glm::mat4 GetViewMatrix() const;
 	virtual void toggleMouse(bool b);
+	glm::vec3 GetPosition() const { return mPosition; }
 
 private:
 	glm::vec3 mPosition;	

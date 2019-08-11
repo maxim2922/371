@@ -1285,9 +1285,16 @@ SphereModel::SphereModel(vec3 size) : Model()
 	float u;
 	float v;
 	vec3 p;
-
+	vec3 minimum=vec3(0,0,0);
+	vec3 maximum=vec3(0,0,0);
 	for (int i = 0; i < numOfVertices; i++)
 	{
+		minimum = vec3(min(vertexBuffer[i].position.x, minimum.x), min(vertexBuffer[i].position.y, minimum.y),
+			min(vertexBuffer[i].position.z, minimum.z));
+		maximum = vec3(max(vertexBuffer[i].position.x, maximum.x), min(vertexBuffer[i].position.y, maximum.y),
+			min(vertexBuffer[i].position.z, maximum.z));
+		
+
 		p = normalize(vertexBuffer[i].position);
 		u = 0.5f + atan2(-p.z, -p.x) / (2 * M_PI);
 		v = 0.5f - asin(-p.y) / (M_PI);
@@ -1295,6 +1302,7 @@ SphereModel::SphereModel(vec3 size) : Model()
 		Vertex2 v2 = { p, vertexBuffer[i].normal, vertexBuffer[i].color, uv };
 		vertexBuffer2.push_back(v2);
 	}
+	boundingSphereRadius = distance(minimum, maximum) / 2;
 
 
 	glGenVertexArrays(1, &mVAO);

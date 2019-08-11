@@ -21,6 +21,7 @@ class AnimationKey;
 class ParticleSystem;
 class ParticleDescriptor;
 class BSpline;
+class AsteroidModel;
 
 class World
 {
@@ -44,7 +45,6 @@ public:
     void AddParticleSystem(ParticleSystem* particleSystem);
     void RemoveParticleSystem(ParticleSystem* particleSystem);
     void AddParticleDescriptor(ParticleDescriptor* particleDescriptor);
-
     
 private:
     static World* instance;
