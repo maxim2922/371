@@ -35,6 +35,7 @@ public:
 	void SetRotation(glm::vec3 axis, float angleDegrees);
 	void SetVelocity(glm::vec3 newVelocity);
 	void SetMaterialCoefficients(glm::vec4 material);
+	virtual bool IntersectsRay(glm::vec3 source, glm::vec3 direction) { return false; }
 
 	glm::vec3 GetPosition() const		{ return mPosition; }
 	glm::vec3 GetScaling() const		{ return mScaling; }

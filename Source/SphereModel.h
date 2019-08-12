@@ -19,7 +19,8 @@ public:
 
     virtual void Update(float dt);
     virtual void Draw();
-    
+	bool IntersectsRay(glm::vec3 source, glm::vec3 direction);
+
 protected:
     virtual bool ParseLine(const std::vector<ci_string> &token);
 

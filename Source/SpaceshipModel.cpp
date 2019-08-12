@@ -140,7 +140,8 @@ void SpaceshipModel::Draw()
 		GLuint worldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
 		glUniformMatrix4fv(worldMatrixLocation, 1, GL_FALSE, &spaceshipWorldMatrix[0][0]);
 	}
-
+	GLuint MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
+	glUniform4f(MaterialID, GetMaterialCoefficients().x, GetMaterialCoefficients().y, GetMaterialCoefficients().z, GetMaterialCoefficients().w);
 	glDrawArrays(GL_QUADS, 0, vertexCount);
 }
 
