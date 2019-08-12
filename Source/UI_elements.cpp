@@ -192,4 +192,7 @@ bool UI_elements::ParseLine(const std::vector<ci_string> &token)
 
 }
 
+void UI_elements::setTexture(const char * imagepath) {
+	mTextureID = TextureLoader::LoadTexture(imagepath);
+}
 

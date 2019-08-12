@@ -19,6 +19,7 @@ public:
     
     virtual void Update(float dt);
     virtual void Draw();
+	void setTexture(const char * imagepath);
 
 
     
