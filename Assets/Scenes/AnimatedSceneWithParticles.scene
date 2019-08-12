@@ -399,7 +399,7 @@ texturePath = "../Assets/Textures/3.png"
 
 [Spaceship]
 name	= "spacecraft"
-materialCoefficients = 0.8 0.6 0.0 0.0
+materialCoefficients = 1.0 0.0 0.0 0.0
 texturePath = "../Assets/Textures/f.png"
 
 [Sphere]
@@ -493,4 +493,40 @@ animation = "CycleAnimNeptune"
 materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/neptune.jpg"
 mass = 1000000000.0
+
+[UI]
+position = 0.0 0.0 0.0
+materialCoefficients = 1.0 0.0 0.0 0.0
+texturePath = "../Assets/Textures/FirstPerson.png"
+
+
+[UI]
+position = 60.0 0.0 0.0
+materialCoefficients = 1.0 0.0 0.0 0.0
+texturePath = "../Assets/Textures/ThirdPerson.png"
+
+
+[UI]
+position = 120.0 0.0 0.0
+materialCoefficients = 1.0 0.0 0.0 0.0
+texturePath = "../Assets/Textures/BirdView.png"
+
+
+[UI]
+position = 180.0 0.0 0.0
+materialCoefficients = 1.0 0.0 0.0 0.0
+texturePath = "../Assets/Textures/PauseButton.png"
+
+
+[UI]
+position = 240.0 0.0 0.0
+materialCoefficients = 1.0 0.0 0.0 0.0
+texturePath = "../Assets/Textures/1x.png"
+
+
+[UI]
+position = 300.0 0.0 0.0
+materialCoefficients = 1.0 0.0 0.0 0.0
+texturePath = "../Assets/Textures/10x.png"
+
 

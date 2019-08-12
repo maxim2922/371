@@ -31,13 +31,14 @@
 #include "BSpline.h"
 #include "BSplineCamera.h"
 #include "AsteroidModel.h"
+#include "UI_elements.hpp"
 
 using namespace std;
 using namespace glm;
 
 World* World::instance;
 FirstPersonCamera* fp = new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f));
-
+ThirdPersonCamera* tp = new ThirdPersonCamera(vec3(3.0f, 5.0f, 20.0f));
 World::World()
 {
     instance = this;
@@ -46,7 +47,7 @@ World::World()
 	mCamera.push_back(fp);
 	mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 	mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-	mCamera.push_back(new ThirdPersonCamera(vec3(3.0f, 5.0f, 20.0f)));
+	mCamera.push_back(tp);
 	mCurrentCamera = 0;
 
     
@@ -66,6 +67,13 @@ World::~World()
 {
 	// Models
 	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
+	{
+		delete *it;
+	}
+
+	mModel.clear();
+	
+	for (vector<UI_elements*>::iterator it = mUI.begin(); it < mUI.end(); ++it)
 	{
 		delete *it;
 	}
@@ -121,12 +129,17 @@ World* World::GetInstance()
 int lastMouseButtonState = GLFW_RELEASE;
 void World::Update(float dt)
 {
+	float dt2 = dt * speed;
 	// Read mouse button. Toggle first person if RIGHT click is detected.
 	if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
 		fp->toggleMouse(true);
+		tp->toggleMouse(true);
+
 	}
 	else if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
 		fp->toggleMouse(false);
+		tp->toggleMouse(false);
+
 	}
 
 	// User Inputs
@@ -170,19 +183,20 @@ void World::Update(float dt)
     // Update animation and keys
     for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
     {
-        (*it)->Update(dt);
+        (*it)->Update(dt2);
     }
     
     for (vector<AnimationKey*>::iterator it = mAnimationKey.begin(); it < mAnimationKey.end(); ++it)
     {
-        (*it)->Update(dt);
+        (*it)->Update(dt2);
     }
 
 
 	// Update current Camera
 	mCamera[mCurrentCamera]->Update(dt);
+	//Raycasting
 	if (lastMouseButtonState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS
-		&& glfwGetKey(EventManager::GetWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+		&& buttonState==2) {
 		for (vector<Model*>::iterator it = mModel.begin() + 2; it < mModel.end(); ++it)
 		{
 			if ((*it)->IntersectsRay(fp->GetPosition(), vec3(-inverse(GetCurrentCamera()->GetViewMatrix())[2])) == true) {
@@ -190,12 +204,12 @@ void World::Update(float dt)
 				fp->setPosition((*it)->GetPosition()+vec3(0.0f, 0.0f, 10.0f));
 				fp->setLookAt((*it)->GetPosition());
 				mCurrentCamera = 0;
-				printf("Radius is %f and Velocity is %f\n", (*it)->GetRadius(), (*it)->GetVelocity());
 				mCamera[mCurrentCamera]->Update(dt);
 			}
 		}
 	}
-	else if (lastMouseButtonState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+	else if (lastMouseButtonState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS
+		&& glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
 		if (mCurrentCamera == 3) {
 			mModel.push_back(new AsteroidModel(GetCurrentCamera()->GetPosition() + vec3(0, 0.15f, -0.1f),
 				vec3(-inverse(GetCurrentCamera()->GetViewMatrix())[2]), vec3(0.1f, 0.1f, 0.1f)));
@@ -263,7 +277,7 @@ void World::Update(float dt)
 	// Update models
 	for (vector<Model*>::iterator it = mModel.begin() + 1; it < mModel.end(); ++it)
 	{
-		(*it)->Update(dt);
+		(*it)->Update(dt2);
 	}
     
     // Update billboards
@@ -329,6 +343,15 @@ void World::Draw()
 		(*it)->Draw();
 	}
 
+	for (vector<UI_elements*>::iterator it = mUI.begin(); it < mUI.end(); ++it)
+	{
+
+		(*it)->Draw();
+	}
+	glUseProgram(Renderer::GetShaderProgramID());
+	Renderer::CheckForErrors();
+
+
 	// Draw Path Lines
 	// Set Shader for path lines
 	unsigned int prevShader = Renderer::GetCurrentShader();
@@ -362,6 +385,8 @@ void World::Draw()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     mpBillboardList->Draw();
     glDisable(GL_BLEND);
+
+	getButtonInteraction();
 
 	// Restore previous shader
 	Renderer::SetShader((ShaderType) prevShader);
@@ -427,6 +452,14 @@ void World::LoadScene(const char * scene_path)
 				Animation* anim = new Animation();
 				anim->Load(iss);
 				mAnimation.push_back(anim);
+			}
+
+			else if (result == "ui")
+			{
+				UI_elements* ui = new UI_elements();
+				ui->Load(iss);
+			//	ui->setUI(true);
+				mUI.push_back(ui);
 			}
 			else if (result == "spline")
 			{
@@ -532,4 +565,83 @@ ParticleDescriptor* World::FindParticleDescriptor(ci_string name)
         }
     }
     return nullptr;
+}
+
+
+void World::getButtonInteraction() {
+	EventManager::GetMouseButton();
+	if (EventManager::GetMousePositionX()<402
+		&& EventManager::GetMousePositionX()>342 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 5;
+
+	}
+	if (EventManager::GetMousePositionX()<462
+		&& EventManager::GetMousePositionX()>402 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 4;
+	}
+	if (EventManager::GetMousePositionX()<522
+		&& EventManager::GetMousePositionX()>462 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 3;
+	}
+
+	if (EventManager::GetMousePositionX()<582
+		&& EventManager::GetMousePositionX()>522 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 2;
+	}
+
+	if (EventManager::GetMousePositionX()<642
+		&& EventManager::GetMousePositionX()>582 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 1;
+	}
+
+	if (EventManager::GetMousePositionX()<702
+		&& EventManager::GetMousePositionX()>642 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 0;
+	}
+
+
+	switch (buttonState) {
+	case 0:
+		speed = 10;
+		break;
+	case 1:
+		speed = 1;
+		break;
+	case 2:
+		speed = 0;
+		break;
+
+	case 3: // bird view
+		mCurrentCamera = 1;
+		break;
+	case 4: // third person view
+		mCurrentCamera = 3;
+		break;
+	case 5: // first person view
+		mCurrentCamera = 0;
+		break;
+
+	default:
+		speed = 1;
+	}
+
+
 }
