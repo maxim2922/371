@@ -528,6 +528,7 @@ scaling  = 0.38 0.38 0.38
 position = 5.0 2.0 0.0
 rotation = 0.0 1.0 0.0 0
 animation = "CycleAnimMercury"
+materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/mercury.jpg"
 mass = 1000000000.0
 
@@ -558,6 +559,7 @@ position = 13.16 -5.0 0.0
 rotation = 0.0 1.0 0.0 180
 parent = "Earth"
 animation = "CycleAnimMoon"
+materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/moon.jpg"
 
 [Sphere]
@@ -644,4 +646,25 @@ texturePath = "../Assets/Textures/1x.png"
 position = 300.0 0.0 0.0
 materialCoefficients = 1.0 0.0 0.0 0.0
 texturePath = "../Assets/Textures/10x.png"
+
+[Asteroid]
+materialCoefficients = 0.4 0.6 0.0 0.0
+texturePath = "../Assets/Textures/mercury.jpg"
+
+[Asteroid]
+materialCoefficients = 0.4 0.6 0.0 0.0
+texturePath = "../Assets/Textures/mercury.jpg"
+
+[Asteroid]
+materialCoefficients = 0.4 0.6 0.0 0.0
+texturePath = "../Assets/Textures/mercury.jpg"
+
+[Asteroid]
+materialCoefficients = 0.4 0.6 0.0 0.0
+texturePath = "../Assets/Textures/mercury.jpg"
+
+[Asteroid]
+materialCoefficients = 0.4 0.6 0.0 0.0
+texturePath = "../Assets/Textures/mercury.jpg"
+
 
