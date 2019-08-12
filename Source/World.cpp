@@ -17,6 +17,7 @@
 
 #include "CubeModel.h"
 #include "SphereModel.h"
+#include "RingModel.h"
 #include "SpaceshipModel.h"
 #include "Animation.h"
 #include "Billboard.h"
@@ -39,17 +40,17 @@ using namespace glm;
 World* World::instance;
 FirstPersonCamera* fp = new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f));
 ThirdPersonCamera* tp = new ThirdPersonCamera(vec3(3.0f, 5.0f, 20.0f));
+
 World::World()
 {
     instance = this;
 
 	// Setup Camera
 	mCamera.push_back(fp);
-	mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-	mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+	mCamera.push_back(new StaticCamera(vec3(3.0f, 500.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+	mCamera.push_back(new StaticCamera(vec3(0.5f, 0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 	mCamera.push_back(tp);
 	mCurrentCamera = 0;
-
     
 #if defined(PLATFORM_OSX)
 //    int billboardTextureID = TextureLoader::LoadTexture("Textures/BillboardTest.bmp");
@@ -72,14 +73,13 @@ World::~World()
 	}
 
 	mModel.clear();
-	
+
 	for (vector<UI_elements*>::iterator it = mUI.begin(); it < mUI.end(); ++it)
 	{
 		delete *it;
 	}
 
-	mModel.clear();
-
+	mUI.clear();
 	for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
 	{
 		delete *it;
@@ -118,7 +118,7 @@ World::~World()
 		delete *it;
 	}
 	mSpline.clear();
-    
+
 	delete mpBillboardList;
 }
 
@@ -134,14 +134,11 @@ void World::Update(float dt)
 	if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
 		fp->toggleMouse(true);
 		tp->toggleMouse(true);
-
 	}
 	else if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
 		fp->toggleMouse(false);
 		tp->toggleMouse(false);
-
 	}
-
 	// User Inputs
 	// 0 1 2 to change the Camera
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_1 ) == GLFW_PRESS)
@@ -196,12 +193,12 @@ void World::Update(float dt)
 	mCamera[mCurrentCamera]->Update(dt);
 	//Raycasting
 	if (lastMouseButtonState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS
-		&& buttonState==2) {
+		&& buttonState == 2) {
 		for (vector<Model*>::iterator it = mModel.begin() + 2; it < mModel.end(); ++it)
 		{
 			if ((*it)->IntersectsRay(fp->GetPosition(), vec3(-inverse(GetCurrentCamera()->GetViewMatrix())[2])) == true) {
 				fp->toggleMouse(true);
-				fp->setPosition((*it)->GetPosition()+vec3(0.0f, 0.0f, 10.0f));
+				fp->setPosition((*it)->GetPosition() + vec3(0.0f, 0.0f, 10.0f));
 				fp->setLookAt((*it)->GetPosition());
 				mCurrentCamera = 0;
 				mCamera[mCurrentCamera]->Update(dt);
@@ -222,7 +219,7 @@ void World::Update(float dt)
 	lastMouseButtonState = glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
 
 	//Check collisions
-	for (vector<Model*>::iterator it = mModel.begin() + 2; it < mModel.end(); ++it)
+	for (vector<Model*>::iterator it = mModel.begin() +3; it < mModel.end(); ++it)
 	{
 
 		//Intersphere collisions
@@ -333,10 +330,9 @@ void World::Draw()
 	glDisable(GL_DEPTH_TEST);
 	(*mModel.begin())->Draw();
 	glEnable(GL_DEPTH_TEST);
-	
 	glUseProgram(Renderer::GetShaderProgramID());
 	Renderer::CheckForErrors();
-	
+
 	// Draw models
 	for (vector<Model*>::iterator it = mModel.begin() + 1; it < mModel.end(); ++it)
 	{
@@ -350,9 +346,8 @@ void World::Draw()
 	}
 	glUseProgram(Renderer::GetShaderProgramID());
 	Renderer::CheckForErrors();
-
-
 	// Draw Path Lines
+	
 	// Set Shader for path lines
 	unsigned int prevShader = Renderer::GetCurrentShader();
 	Renderer::SetShader(SHADER_PATH_LINES);
@@ -387,7 +382,6 @@ void World::Draw()
     glDisable(GL_BLEND);
 
 	getButtonInteraction();
-
 	// Restore previous shader
 	Renderer::SetShader((ShaderType) prevShader);
 
@@ -429,6 +423,12 @@ void World::LoadScene(const char * scene_path)
                 sphere->Load(iss);
                 mModel.push_back(sphere);
             }
+			else if (result == "ring")
+			{
+				RingModel* ring = new RingModel();
+				ring->Load(iss);
+				mModel.push_back(ring);
+			}
 			else if (result == "asteroid")
 			{
 				AsteroidModel* asteroid = new AsteroidModel();
@@ -453,12 +453,11 @@ void World::LoadScene(const char * scene_path)
 				anim->Load(iss);
 				mAnimation.push_back(anim);
 			}
-
 			else if (result == "ui")
 			{
 				UI_elements* ui = new UI_elements();
 				ui->Load(iss);
-			//	ui->setUI(true);
+				//	ui->setUI(true);
 				mUI.push_back(ui);
 			}
 			else if (result == "spline")
@@ -524,6 +523,18 @@ AnimationKey* World::FindAnimationKey(ci_string keyName)
     return nullptr;
 }
 
+Model* World::FindParentModel(ci_string name)
+{
+	for (std::vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
+	{
+		if ((*it)->GetName() == name)
+		{
+			return *it;
+		}
+	}
+	return nullptr;
+ }
+
 const Camera* World::GetCurrentCamera() const
 {
      return mCamera[mCurrentCamera];
@@ -566,8 +577,6 @@ ParticleDescriptor* World::FindParticleDescriptor(ci_string name)
     }
     return nullptr;
 }
-
-
 void World::getButtonInteraction() {
 	EventManager::GetMouseButton();
 	if (EventManager::GetMousePositionX()<402

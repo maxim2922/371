@@ -39,6 +39,7 @@ public:
     Animation* FindAnimation(ci_string animName);
     AnimationKey* FindAnimationKey(ci_string keyName);
     ParticleDescriptor* FindParticleDescriptor(ci_string name);
+	Model* FindParentModel(ci_string name);
 
     const Camera* GetCurrentCamera() const;
     void AddBillboard(Billboard* b);
@@ -46,10 +47,9 @@ public:
     void AddParticleSystem(ParticleSystem* particleSystem);
     void RemoveParticleSystem(ParticleSystem* particleSystem);
     void AddParticleDescriptor(ParticleDescriptor* particleDescriptor);
-
-
-	void getButtonInteraction();
+	
     
+	void getButtonInteraction();
 private:
     static World* instance;
     

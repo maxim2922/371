@@ -39,7 +39,6 @@ GLFWwindow* EventManager::spWindow = nullptr;
 bool EventManager::clicked = false;
 bool EventManager::lastState = GLFW_RELEASE;
 
-
 void EventManager::Initialize()
 {
 	// Initialise GLFW
@@ -163,8 +162,6 @@ float EventManager::GetRandomFloat(float min, float max)
 
     return min + value*(max - min);
 }
-
-
 float EventManager::GetMousePositionX()
 {
 	glfwPollEvents();

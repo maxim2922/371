@@ -48,6 +48,7 @@ public:
 	void Load(ci_istringstream& iss);
 	ci_string GetName() const;
 
+	float GetAnimationSpeed() const { return mAnimationSpeed; }
 protected:
     virtual bool ParseLine(const std::vector<ci_string> &token);
 
@@ -56,6 +57,7 @@ private:
 
 	float mCurrentTime;
     float mDuration;
+	float mAnimationSpeed;
 
     std::vector<AnimationKey> mKey;
     std::vector<float> mKeyTime;

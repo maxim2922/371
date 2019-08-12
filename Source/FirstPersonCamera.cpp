@@ -118,7 +118,6 @@ glm::mat4 FirstPersonCamera::GetViewMatrix() const
 void FirstPersonCamera::toggleMouse(bool value) {
 	freeWill = value;
 }
-
 void FirstPersonCamera::setPosition(vec3 position) {
 	mPosition = position;
 }
