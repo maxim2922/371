@@ -13,6 +13,7 @@ public:
 
 protected:
 	virtual bool ParseLine(const std::vector<ci_string> &token);
+	virtual void randomArray();
 
 private:
 	struct Vertex
@@ -29,6 +30,12 @@ private:
 		glm::vec3 color;
 		glm::vec2 UV;
 	};
+
+	std::vector<bool> tf;
+
+
+	const float random2 = 1.0f / (rand() % 4 + 4.0f);
+	float random1 = rand() % 30;
 	
 	unsigned int mVAO;
 	unsigned int mVBO;
