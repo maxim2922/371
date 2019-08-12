@@ -20,7 +20,7 @@ class Animation;
 class Model
 {
 public:
-	Model();
+	Model(const Model* parent = nullptr);
 	virtual ~Model();
 
 	virtual void Update(float dt) = 0;
@@ -37,14 +37,15 @@ public:
 	void SetMaterialCoefficients(glm::vec4 material);
 	virtual bool IntersectsRay(glm::vec3 source, glm::vec3 direction) { return false; }
 
+
 	glm::vec3 GetPosition() const		{ return mPosition; }
 	glm::vec3 GetScaling() const		{ return mScaling; }
 	glm::vec3 GetRotationAxis() const	{ return mRotationAxis; }
-	float     GetRotationAngle() const	{ return mRotationAngleInDegrees; }
+	float     GetRotationAngle() const	{ return mHorizontalRotationAngleInDegrees; }
     ci_string GetName()                 { return mName; }
 	glm::vec4 GetMaterialCoefficients() const { return materialCoefficients; }
-	glm::vec3 GetVelocity() const		{ return mVelocity; }
-	float GetRadius() const			{ return boundingSphereRadius; }
+	glm::vec3 GetVelocity() const { return mVelocity; }
+	float GetRadius() const { return boundingSphereRadius; }
 	float GetMass() const { return mass; }
 
 protected:
@@ -54,13 +55,15 @@ protected:
 	glm::vec3 mPosition;
 	glm::vec3 mScaling;
 	glm::vec3 mRotationAxis;
-	float     mRotationAngleInDegrees;
+	float     mHorizontalRotationAngleInDegrees;
+	float     mVerticalRotationAngleInDegrees;
 	glm::vec4 materialCoefficients;
-	glm::vec3 mVelocity = glm::vec3(0,0,0);
+	glm::vec3 mVelocity = glm::vec3(0, 0, 0);
 	float boundingSphereRadius = 0;
 	float mass = 1.0f;
-    
-	// Makes the model follow a list of Animation Keys so it's world transform changes over time
+	const Model* mParent;
+
+    // Makes the model follow a list of Animation Keys so it's world transform changes over time
     Animation* mAnimation;
 
 	int mTextureID;

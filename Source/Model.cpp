@@ -17,13 +17,14 @@
 #include <glm/common.hpp>
 #include <string>
 #include "TextureLoader.h"
+#include "EventManager.h"
 
 using namespace std;
 using namespace glm;
 
-Model::Model() 
+Model::Model(const Model* parent)
 : mName("UNNAMED"), mPosition(0.0f, 0.0f, 0.0f), mScaling(1.0f, 1.0f, 1.0f), mRotationAxis(0.0f, 1.0f, 0.0f),
-  mRotationAngleInDegrees(0.0f), mAnimation(nullptr)
+  mHorizontalRotationAngleInDegrees(0.0f), mAnimation(nullptr), mParent(parent)
 {
 }
 
@@ -33,7 +34,7 @@ Model::~Model()
 
 void Model::Update(float dt)
 {
-	mPosition += dt * mVelocity;
+	mPosition += mVelocity * dt;
 }
 
 void Model::Draw()
@@ -95,7 +96,7 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
 			mRotationAxis.x = static_cast<float>(atof(token[2].c_str()));
 			mRotationAxis.y = static_cast<float>(atof(token[3].c_str()));
 			mRotationAxis.z = static_cast<float>(atof(token[4].c_str()));
-			mRotationAngleInDegrees = static_cast<float>(atof(token[5].c_str()));
+			mHorizontalRotationAngleInDegrees = static_cast<float>(atof(token[5].c_str()));
 
 			glm::normalize(mRotationAxis);
 		}
@@ -143,6 +144,15 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
             ParticleSystem* ps = new ParticleSystem(emitter, desc);
             World::GetInstance()->AddParticleSystem(ps);
         }
+		else if (token[0] == "parent")
+		{
+			assert(token.size() > 2);
+			assert(token[1] == "=");
+
+			ci_string parentName = token[2];
+
+			mParent = World::GetInstance()->FindParentModel(parentName);
+		}
 		else if (token[0] == "materialCoefficients")
 		{
 			assert(token.size() > 4);
@@ -168,7 +178,7 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
 			assert(token[1] == "=");
 
 			mass = static_cast<float>(atof(token[2].c_str()));
-			}
+		}
 
 		else
 		{
@@ -184,27 +194,31 @@ glm::mat4 Model::GetWorldMatrix() const
 	// @TODO 2 - You must build the world matrix from the position, scaling and rotation informations
     //           If the model has an animation, get the world transform from the animation.
 	mat4 worldMatrix(1.0f);
-	mat4 t(1.0f);
-
+	mat4 parentMatrix(1.0f);
+	mat4 tr(1.0f);
+	mat4 r(1.0f);
+	mat4 s = glm::scale(mat4(1.0f), mScaling);
     // Solution TRS
 #if 1
     if (mAnimation)
    {
-        // Get translation transform from animation key frames / current time
-		 t = mAnimation->GetAnimationWorldMatrix();
+        // In this case, TR has both a rotation and translation matrix
+		 tr = mAnimation->GetAnimationWorldMatrix();
     }
 	else
 	{
-		 t = glm::translate(mat4(1.0f), mPosition);
+		// Here, just a translation
+		 tr = glm::translate(mat4(1.0f), mPosition);
 	}
-	
-        mat4 r = glm::rotate(mat4(1.0f), glm::radians(mRotationAngleInDegrees), mRotationAxis);
-        mat4 s = glm::scale(mat4(1.0f), mScaling);
-       worldMatrix = t *  r * s;
-    
+	if (mParent != NULL)
+	{
+		parentMatrix = mParent->GetWorldMatrix();
+	}
 #endif
-    
-	return worldMatrix;
+	r = glm::rotate(mat4(1.0f), glm::radians(mHorizontalRotationAngleInDegrees), mRotationAxis);
+	worldMatrix = tr * r * s;
+
+	return parentMatrix * worldMatrix;
 }
 
 void Model::SetPosition(glm::vec3 position)
@@ -220,7 +234,7 @@ void Model::SetScaling(glm::vec3 scaling)
 void Model::SetRotation(glm::vec3 axis, float angleDegrees)
 {
 	mRotationAxis = axis;
-	mRotationAngleInDegrees = angleDegrees;
+	mHorizontalRotationAngleInDegrees = angleDegrees;
 }
 
 void Model::SetVelocity(glm::vec3 newVelocity) {
@@ -230,4 +244,3 @@ void Model::SetVelocity(glm::vec3 newVelocity) {
 void Model::SetMaterialCoefficients(glm::vec4 material) {
 	materialCoefficients = material;
 }
-

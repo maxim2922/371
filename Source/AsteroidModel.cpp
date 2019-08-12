@@ -4,6 +4,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include "TextureLoader.h"
+#include "EventManager.h"
 
 using namespace glm;
 
@@ -1274,6 +1275,19 @@ AsteroidModel::AsteroidModel(vec3 size) : Model() {
 	};
 	randomArray();
 
+	//Random Generation of asteroid attributes
+	const float R1 = 50.0f, R2 = 30.0f;
+	float t = 2 * 3.14159* EventManager::GetRandomFloat(0.0f, 1.0f);
+	float q = EventManager::GetRandomFloat(0.0f, 1.0f) + EventManager::GetRandomFloat(0.0f, 1.0f);
+	float r;
+	float r2 = R1 / R2;
+	(q > 1) ? (r = 2 - q) : (r = q);
+	(r < r2) ? (r = r2 + r * ((R1 - R2) / R2)) : (r = r);
+	mPosition = vec3(20.0f*r*cos(t), EventManager::GetRandomFloat(-3.0f, 3.0f), 20.0f* r*sin(t));
+
+	float scaling = EventManager::GetRandomFloat(0.5f, 0.6f); //Can adjust value of desired scaling
+	mScaling = vec3(scaling, scaling, scaling);
+	
 	std::vector<Vertex2> vertexBuffer2;
 	numOfVertices = sizeof(vertexBuffer) / sizeof(Vertex);
 	float u;

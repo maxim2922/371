@@ -90,19 +90,10 @@ void SpaceshipModel::Update(float dt)
 
 	if (cameraThirdPerson) {
 		const Camera* cam = World::GetInstance()->GetCurrentCamera();
-
-		/*if (mPosition == vec3(0.0f)) {
-			mPosition = cam->GetPosition();
-		}
-
-		if (mPosition != cam->GetPosition()) {
-			mPosition = cam->GetPosition() * dt;
-		}*/
-
-
 		mPosition = cam->GetPosition();
 
-		SetRotation(vec3(0.0f, 1.0f, 0.0f), cam->GetHorizontalAngle() + 90);
+		mHorizontalRotationAngleInDegrees = cam->GetHorizontalAngle() + 90;
+		mVerticalRotationAngleInDegrees = -cam->GetVerticalAngle();
 	}
 }
 
@@ -125,7 +116,8 @@ void SpaceshipModel::Draw()
 	if (cameraThirdPerson)
 	{
 		mat4 spaceshipWorldMatrix = translate(mat4(1.0f), mPosition) *
-			rotate(mat4(1.0f), radians(mRotationAngleInDegrees), vec3(0.0f, 1.0f, 0.0f)) *
+			rotate(mat4(1.0f), radians(mHorizontalRotationAngleInDegrees), vec3(0.0f, 1.0f, 0.0f)) *
+			rotate(mat4(1.0f), radians(mVerticalRotationAngleInDegrees), vec3(1.0f, 0.0f, 0.0f)) *
 			scale(mat4(1.0f), vec3(0.1f, 0.1f, 0.1f));
 
 		GLuint worldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
@@ -134,7 +126,7 @@ void SpaceshipModel::Draw()
 	else
 	{
 		mat4 spaceshipWorldMatrix = translate(mat4(1.0f), vec3(0.0f, 0.0f, 1.0f)) *
-			rotate(mat4(1.0f), radians(mRotationAngleInDegrees), vec3(0.0f, 1.0f, 0.0f)) *
+			rotate(mat4(1.0f), radians(mHorizontalRotationAngleInDegrees), vec3(0.0f, 1.0f, 0.0f)) *
 			scale(mat4(1.0f), vec3(0.01f, 0.01f, 0.01f));
 
 		GLuint worldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");

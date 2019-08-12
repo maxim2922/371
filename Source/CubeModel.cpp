@@ -158,7 +158,7 @@ void CubeModel::Draw()
 	ShaderType oldShader = (ShaderType)Renderer::GetCurrentShader();
 
 	if (mTextureValid)
-	{	
+	{
 		Renderer::SetShader(SHADER_SKYBOX);
 		glUseProgram(Renderer::GetShaderProgramID());
 		Renderer::CheckForErrors();
@@ -181,10 +181,10 @@ void CubeModel::Draw()
 	// Draw the Vertex Buffer
 	// Note this draws a unit Cube
 	// The Model View Projection transforms are computed in the Vertex Shader
-    glBindVertexArray(mVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+	glBindVertexArray(mVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
-	GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform"); 
+	GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
 	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
 
 	// Draw the triangles !

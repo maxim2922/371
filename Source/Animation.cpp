@@ -47,7 +47,7 @@ bool AnimationKey::ParseLine(const std::vector<ci_string> &token)
 }
 
 Animation::Animation() 
-	: mName(""), mCurrentTime(0.0f), mDuration(0.0f), mVBO(0), mVAO(0)
+	: mName(""), mCurrentTime(0.0f), mDuration(0.0f), mVBO(0), mVAO(0),mAnimationSpeed(1.0f)
 {
 }
 
@@ -193,6 +193,14 @@ bool Animation::ParseLine(const std::vector<ci_string> &token)
 		AddKey(key, (float) atof(token[5].c_str()));
 		return true;
 	}
+	else if (token[0] == "animationSpeed")
+	{
+		assert(token.size() > 2);
+		assert(token[1] == "=");
+
+		mAnimationSpeed  = static_cast<float>(atof(token[2].c_str()));
+		return true;
+	}
 	return false;
 }
 
@@ -233,15 +241,15 @@ glm::mat4 Animation::GetAnimationWorldMatrix() const
 
 	//glm::mat4 scalingMatrix = glm::scale(glm::mat4(1.0f), glm::mix(mKey[t].GetScaling(), mKey[t + 1].GetScaling(), (mCurrentTime - mKeyTime[t]) / (mKeyTime[t + 1] - mKeyTime[t])));
 
-	//quat q1 = glm::angleAxis(radians(mKey[t].GetRotationAngle()), mKey[t].GetRotationAxis());
-	//quat q2 = glm::angleAxis(radians(mKey[t + 1].GetRotationAngle()), mKey[t + 1].GetRotationAxis());
-	//quat q3 = glm::slerp(q1, q2, (mCurrentTime - mKeyTime[t]) / (mKeyTime[t + 1] - mKeyTime[t]));
+	quat q1 = glm::angleAxis(radians(mKey[key1].GetRotationAngle()), mKey[key1].GetRotationAxis());
+	quat q2 = glm::angleAxis(radians(mKey[key2].GetRotationAngle()), mKey[key2].GetRotationAxis());
+	quat q3 = glm::slerp(q1, q2, normalizedTime * mAnimationSpeed);
 
 
-	//glm::mat4 rotationMatrix = glm::toMat4(q3);
+	glm::mat4 rotationMatrix = glm::toMat4(q3);
 
 	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), position);
 
 
-	return translationMatrix;
+	return translationMatrix * rotationMatrix;
 }
