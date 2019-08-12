@@ -1272,7 +1272,7 @@ AsteroidModel::AsteroidModel(vec3 size) : Model() {
 		{ vec3(0.173648, -0.000000, -0.984808), vec3(0.173648, -0.000000, -0.984808), vec3(1.0f, 0.05f, 0.05f) },
 		{ vec3(0.000000, 0.000000, -1.000000), vec3(0.000000, 0.000000, -1.000000), vec3(1.0f, 0.05f, 0.05f) },
 	};
-
+	randomArray();
 
 	std::vector<Vertex2> vertexBuffer2;
 	numOfVertices = sizeof(vertexBuffer) / sizeof(Vertex);
@@ -1296,7 +1296,23 @@ AsteroidModel::AsteroidModel(vec3 size) : Model() {
 		vertexBuffer2.push_back(v2);
 	}
 	boundingSphereRadius = distance(minimum, maximum) / 2;
-
+	for (int i = 1; i < numOfVertices; i++)
+	{
+		if (tf[i])
+		{
+			vertexBuffer2[i].position += normalize(vertexBuffer2[i].normal)*random2;
+			//vertexBuffer2[i].UV += vertexBuffer2[i].UV;
+			for (int j = 0; j < numOfVertices; j++)
+				if (vertexBuffer[i].position.x == vertexBuffer[j].position.x && vertexBuffer[i].position.y == vertexBuffer[j].position.y && vertexBuffer[i].position.z == vertexBuffer[j].position.z)
+				{
+					if (j != i)
+					{
+						vertexBuffer2[j].position += normalize(vertexBuffer2[j].normal)*random2;
+						//vertexBuffer2[j].UV += vertexBuffer2[i].UV;
+					}
+				}
+		}
+	}
 
 	glGenVertexArrays(1, &mVAO);
 	glBindVertexArray(mVAO);
@@ -1345,6 +1361,7 @@ AsteroidModel::AsteroidModel(vec3 size) : Model() {
 		(void*)(3 * sizeof(vec3)) // Color is Offseted by 2 vec3 (see class Vertex)
 	);
 	glEnableVertexAttribArray(3);
+
 }
 AsteroidModel::AsteroidModel(vec3 location, vec3 velocity, vec3 size) : Model()
 {
@@ -2612,6 +2629,7 @@ AsteroidModel::AsteroidModel(vec3 location, vec3 velocity, vec3 size) : Model()
 		{ vec3(0.173648, -0.000000, -0.984808), vec3(0.173648, -0.000000, -0.984808), vec3(1.0f, 0.05f, 0.05f) },
 		{ vec3(0.000000, 0.000000, -1.000000), vec3(0.000000, 0.000000, -1.000000), vec3(1.0f, 0.05f, 0.05f) },
 	};
+	randomArray();
 
 	mPosition = location;
 	mVelocity = normalize(velocity)*5.0f;
@@ -2642,7 +2660,23 @@ AsteroidModel::AsteroidModel(vec3 location, vec3 velocity, vec3 size) : Model()
 		vertexBuffer2.push_back(v2);
 	}
 	boundingSphereRadius = distance(minimum, maximum) / 2;
-
+	for (int i = 1; i < numOfVertices; i++)
+	{
+		if (tf[i])
+		{
+			vertexBuffer2[i].position += normalize(vertexBuffer2[i].normal)*random2;
+			//vertexBuffer2[i].UV += vertexBuffer2[i].UV;
+			for (int j = 0; j < numOfVertices; j++)
+				if (vertexBuffer[i].position.x == vertexBuffer[j].position.x && vertexBuffer[i].position.y == vertexBuffer[j].position.y && vertexBuffer[i].position.z == vertexBuffer[j].position.z)
+				{
+					if (j != i)
+					{
+						vertexBuffer2[j].position += normalize(vertexBuffer2[j].normal)*random2;
+						//vertexBuffer2[j].UV += vertexBuffer2[i].UV;
+					}
+				}
+		}
+	}
 	glGenVertexArrays(1, &mVAO);
 	glBindVertexArray(mVAO);
 
@@ -2736,5 +2770,18 @@ bool AsteroidModel::ParseLine(const std::vector<ci_string> &token)
 	else
 	{
 		return Model::ParseLine(token);
+	}
+}
+
+void AsteroidModel::randomArray()
+{
+	for (int i = 0; i < 1261; i++)
+	{
+		if (1 == rand() % 30)
+		{
+			tf.push_back(true);
+		}
+		else
+			tf.push_back(false);
 	}
 }

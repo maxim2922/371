@@ -181,7 +181,7 @@ void World::Update(float dt)
 	lastMouseButtonState=glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
 
 	//Check collisions
-	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
+	for (vector<Model*>::iterator it = mModel.begin()+1; it < mModel.end(); ++it)
 	{
 
 		//Intersphere collisions
@@ -226,9 +226,9 @@ void World::Update(float dt)
 			}
 		}
 	}
-	
+	(*mModel.begin())->SetPosition(GetCurrentCamera()->GetPosition());
 	// Update models
-	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
+	for (vector<Model*>::iterator it = mModel.begin()+1; it < mModel.end(); ++it)
 	{
 		(*it)->Update(dt);
 	}
@@ -283,10 +283,14 @@ void World::Draw()
 	glUniform3f(LightColorID, lightColor.r, lightColor.g, lightColor.b);
 	glUniform3f(LightAttenuationID, lightKc, lightKl, lightKq);
 
-	
+	glDisable(GL_DEPTH_TEST);
+
+	(*mModel.begin())->Draw();
+
+	glEnable(GL_DEPTH_TEST);
 	
 	// Draw models
-	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
+	for (vector<Model*>::iterator it = mModel.begin()+1; it < mModel.end(); ++it)
 	{
 		(*it)->Draw();
 	}
