@@ -8,7 +8,7 @@
 
 using namespace glm;
 
-bool ObjLoader::loadObj(const char* path, vector<vec3>& out_vertices, vector<vec2>& out_uvs, vector<vec3>& out_normals)
+bool ObjLoader::loadObj(const char* path, vector<vec3>& vertices, vector<vec2>& uvs, vector<vec3>& normals)
 {
 	FILE* file = fopen(path, "r");
 	if (file == NULL) {
@@ -25,10 +25,10 @@ bool ObjLoader::loadObj(const char* path, vector<vec3>& out_vertices, vector<vec
 		i++;
 		char headline[150];	// here i'm assuming there isn't more than 100 characters in a sentence.
 
-								// read the first word of the line
+		// read the first word of the line
 		int res = fscanf(file, "%s", headline);
 		if (res == EOF)
-			break; // EOF = End Of File. Quit the loop.
+			break; // EOF = End Of File
 
 		if (strcmp(headline, "v") == 0) {
 			glm::vec3 vertex;
@@ -46,7 +46,6 @@ bool ObjLoader::loadObj(const char* path, vector<vec3>& out_vertices, vector<vec
 			temp_normals.push_back(normal);
 		}
 		else if (strcmp(headline, "f") == 0) {
-			//std::string vertex1, vertex2, vertex3;
 			unsigned int vertexIndex[4], uvIndex[4], normalIndex[4];
 			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2], &vertexIndex[3], &uvIndex[3], &normalIndex[3]);
 
@@ -77,117 +76,18 @@ bool ObjLoader::loadObj(const char* path, vector<vec3>& out_vertices, vector<vec
 	for (unsigned int i = 0; i < vertexIndices.size(); i++) {
 		unsigned int vertexIndex = vertexIndices[i];
 		glm::vec3 vertex = temp_vertices[vertexIndex - 1];
-		out_vertices.push_back(vertex);
+		vertices.push_back(vertex);
 	}
 
 	for (unsigned int i = 0; i < uvIndices.size(); i++) {
 		unsigned int uvIndex = uvIndices[i];
 		glm::vec2 vertex = temp_uvs[uvIndex - 1];
-		out_uvs.push_back(vertex);
+		uvs.push_back(vertex);
 	}
 
 	for (unsigned int i = 0; i < normalIndices.size(); i++) {
 		unsigned int normalIndex = normalIndices[i];
 		glm::vec3 vertex = temp_normals[normalIndex - 1];
-		out_normals.push_back(vertex);
+		normals.push_back(vertex);
 	}
-
-	//MtlLoader("../Assets/Models/fighter.mtl");
-}
-
-void ObjLoader::MtlLoader(const char* path) {
-
-	vector<string>tmp;
-	string imageName;
-	ifstream fin;
-	char line[256];
-
-	fin.open(path);
-	while (!fin.eof())
-	{
-		fin.getline(line, 200);
-		tmp.push_back(line);
-	}
-	fin.close();
-
-	//READ MATERIALS
-	bool matExists = false;
-	string lastMapFileName;
-	Material m;
-
-	for (int i = 0; i < tmp.size() + 1; i++)
-	{
-
-		// To register the last material file before exiting for loop
-		if (i == tmp.size()) {
-			materials.push_back(m);
-			break;
-		}
-
-		if (tmp[i][0] == '\n' || tmp[i][0] == '#')
-			continue;
-
-		if (tmp[i][0] == 'n' && tmp[i][1] == 'e' && tmp[i][2] == 'w')
-		{
-			//This is a new material, let's save the previous one first
-			if (matExists) {
-				materials.push_back(m);
-				m.reset();
-				matExists = false;
-			}
-			sscanf(tmp[i].c_str(), "newmtl %s", &m.name);
-		}
-		else if (tmp[i][0] == 'N' && tmp[i][1] == 's') {
-			sscanf(tmp[i].c_str(), "Ns %f", &m.ns);
-			matExists = true;
-		}
-		else if (tmp[i][0] == 'K' && tmp[i][1] == 'a') {
-			sscanf(tmp[i].c_str(), "Ka %f %f %f", &m.ka[0], &m.ka[1], &m.ka[2]);
-			matExists = true;
-		}
-		else if (tmp[i][0] == 'K' && tmp[i][1] == 'd') {
-			sscanf(tmp[i].c_str(), "Kd %f %f %f", &m.kd[0], &m.kd[1], &m.kd[2]);
-			matExists = true;
-		}
-		else if (tmp[i][0] == 'K' && tmp[i][1] == 's') {
-			sscanf(tmp[i].c_str(), "Ks %f %f %f", &m.ks[0], &m.ks[1], &m.ks[2]);
-			matExists = true;
-		}
-		else if (tmp[i][0] == 'N' && tmp[i][1] == 'i') {
-			sscanf(tmp[i].c_str(), "Ni %f", &m.ni);
-			matExists = true;
-		}
-		else if (tmp[i][0] == 'd' && tmp[i][1] == ' ') {
-			sscanf(tmp[i].c_str(), "d %f", &m.d);
-			matExists = true;
-		}
-		else if (tmp[i][0] == 'i' && tmp[i][1] == 'l') {
-			sscanf(tmp[i].c_str(), "illum %f", &m.illum);
-			matExists = true;
-		}
-		else if (tmp[i][0] == 'm' && tmp[i][1] == 'a')
-		{
-			sscanf(tmp[i].c_str(), "map_Kd %s", &m.mapFileName);
-			m.textureID = LoadMaterial(m.mapFileName);
-			matExists = true;
-		}
-	}
-}
-
-unsigned int ObjLoader::LoadMaterial(string imgPath)
-{
-	unsigned int id;
-	sf::Image img;
-	img.loadFromFile(imgPath);
-
-	glGenTextures(1, &id);
-	glBindTexture(GL_TEXTURE_2D, id);
-	glEnable(GL_TEXTURE_2D);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.getSize().x, img.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.getPixelsPtr());
-
-	GLuint textureLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "myTextureSampler");
-	glBindTexture(GL_TEXTURE_2D, id);
-
-	return id;
 }
