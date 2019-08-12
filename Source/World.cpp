@@ -13,16 +13,15 @@
 
 #include "StaticCamera.h"
 #include "FirstPersonCamera.h"
-#include "ThirdPersonCamera.h"
 
 #include "CubeModel.h"
 #include "SphereModel.h"
-#include "SpaceshipModel.h"
 #include "Animation.h"
 #include "Billboard.h"
 #include <GLFW/glfw3.h>
 #include "EventManager.h"
 #include "TextureLoader.h"
+#include "UI_elements.hpp"
 
 #include "ParticleDescriptor.h"
 #include "ParticleEmitter.h"
@@ -30,13 +29,15 @@
 
 #include "BSpline.h"
 #include "BSplineCamera.h"
-#include "AsteroidModel.h"
+#include <glm/gtx/transform.hpp>
+
 
 using namespace std;
 using namespace glm;
 
 World* World::instance;
 FirstPersonCamera* fp = new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f));
+
 
 World::World()
 {
@@ -46,7 +47,6 @@ World::World()
 	mCamera.push_back(fp);
 	mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 	mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-	mCamera.push_back(new ThirdPersonCamera(vec3(3.0f, 5.0f, 20.0f)));
 	mCurrentCamera = 0;
 
     
@@ -60,6 +60,9 @@ World::World()
     assert(billboardTextureID != 0);
 
     mpBillboardList = new BillboardList(2048, billboardTextureID);
+
+    
+    
 }
 
 World::~World()
@@ -105,11 +108,6 @@ World::~World()
     }
     mParticleDescriptorList.clear();
 
-	for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it)
-	{
-		delete *it;
-	}
-	mSpline.clear();
     
 	delete mpBillboardList;
 }
@@ -118,9 +116,10 @@ World* World::GetInstance()
 {
     return instance;
 }
-int lastMouseButtonState = GLFW_RELEASE;
+
 void World::Update(float dt)
 {
+	float dt2 = speed*dt;
 	// Read mouse button. Toggle first person if RIGHT click is detected.
 	if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
 		fp->toggleMouse(true);
@@ -128,7 +127,7 @@ void World::Update(float dt)
 	else if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
 		fp->toggleMouse(false);
 	}
-
+	
 	// User Inputs
 	// 0 1 2 to change the Camera
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_1 ) == GLFW_PRESS)
@@ -149,13 +148,6 @@ void World::Update(float dt)
 			mCurrentCamera = 2;
 		}
 	}
-	else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_4) == GLFW_PRESS)
-	{
-		if (mCamera.size() > 3)
-		{
-			mCurrentCamera = 3;
-		}
-	}
 
 	// Spacebar to change the shader
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_0 ) == GLFW_PRESS)
@@ -170,98 +162,20 @@ void World::Update(float dt)
     // Update animation and keys
     for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
     {
-        (*it)->Update(dt);
+        (*it)->Update(dt2);
     }
     
     for (vector<AnimationKey*>::iterator it = mAnimationKey.begin(); it < mAnimationKey.end(); ++it)
     {
-        (*it)->Update(dt);
+        (*it)->Update(dt2);
     }
 
 
 	// Update current Camera
 	mCamera[mCurrentCamera]->Update(dt);
-	if (lastMouseButtonState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS
-		&& glfwGetKey(EventManager::GetWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-		for (vector<Model*>::iterator it = mModel.begin() + 2; it < mModel.end(); ++it)
-		{
-			if ((*it)->IntersectsRay(fp->GetPosition(), vec3(-inverse(GetCurrentCamera()->GetViewMatrix())[2])) == true) {
-				fp->toggleMouse(true);
-				fp->setPosition((*it)->GetPosition()+vec3(0.0f, 0.0f, 10.0f));
-				fp->setLookAt((*it)->GetPosition());
-				mCurrentCamera = 0;
-				printf("Radius is %f and Velocity is %f\n", (*it)->GetRadius(), (*it)->GetVelocity());
-				mCamera[mCurrentCamera]->Update(dt);
-			}
-		}
-	}
-	else if (lastMouseButtonState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-		if (mCurrentCamera == 3) {
-			mModel.push_back(new AsteroidModel(GetCurrentCamera()->GetPosition() + vec3(0, 0.15f, -0.1f),
-				vec3(-inverse(GetCurrentCamera()->GetViewMatrix())[2]), vec3(0.1f, 0.1f, 0.1f)));
-		}
-		else {
-			mModel.push_back(new AsteroidModel(GetCurrentCamera()->GetPosition(),
-				vec3(-inverse(GetCurrentCamera()->GetViewMatrix())[2]), vec3(0.1f, 0.1f, 0.1f)));
-		}
-	}
-	lastMouseButtonState = glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
-
-	//Check collisions
-	for (vector<Model*>::iterator it = mModel.begin() + 2; it < mModel.end(); ++it)
-	{
-
-		//Intersphere collisions
-		//complexity: O(n^2)
-		for (vector<Model*>::iterator it2 = it; it2 < mModel.end(); ++it2)
-		{
-
-			//Models can't collide with themselves, and both models cant be projectiles
-			if (it != it2)
-			{
-				Model* m1 = *it;
-				Model* m2 = *it2;
-
-				float distance = glm::distance(m1->GetPosition(), m2->GetPosition());
-				float r1 = m1->GetRadius();
-				float r2 = m2->GetRadius();
-				float totalRadii = r1 + r2;
-
-				//TODO 2 - Collisions between Models
-
-				if (distance <= totalRadii) //Collision
-				{
-					glm::vec3 collisionNormal = glm::normalize(m1->GetPosition() - m2->GetPosition());
-					glm::vec3 collisionPoint = m2->GetPosition() + r2 * collisionNormal;
-					glm::vec3 normalVelocity1 = glm::dot(m1->GetVelocity(), collisionNormal) * collisionNormal;
-					glm::vec3 normalVelocity2 = glm::dot(m2->GetVelocity(), collisionNormal) * collisionNormal;
-
-					glm::vec3 tangentMomentum1 = m1->GetVelocity() - normalVelocity1;
-					glm::vec3 tangentMomentum2 = m2->GetVelocity() - normalVelocity2;
-
-					float mass1 = m1->GetMass();
-					float mass2 = m2->GetMass();
-					glm::vec3 newNormalVelocity1 = ((mass1 - mass2) / (mass1 + mass2)) * normalVelocity1 + ((2 * mass2) / (mass1 + mass2) * normalVelocity2);
-					glm::vec3 newNormalVelocity2 = ((2 * mass1) / (mass1 + mass2)) * normalVelocity1 + ((mass2 - mass1) / (mass1 + mass2) * normalVelocity2);
-
-					m1->SetVelocity(newNormalVelocity1 + tangentMomentum1);
-					m2->SetVelocity(newNormalVelocity2 + tangentMomentum2);
-
-				}
-
-
-			}
-		}
-	}
-
-	(*mModel.begin())->SetPosition(GetCurrentCamera()->GetPosition());
-	if (mCurrentCamera == 3)
-	{
-		(*mModel.begin())->SetPosition(GetCurrentCamera()->GetAngledPosition());
-	}
 
 	// Update models
-	for (vector<Model*>::iterator it = mModel.begin() + 1; it < mModel.end(); ++it)
+	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
 	{
 		(*it)->Update(dt);
 	}
@@ -310,32 +224,40 @@ void World::Draw()
 	const float lightKl = 0.02f;
 	const float lightKq = 0.002f;
 	const vec4 lightPosition(0.0f, 0.0f, 0.0f, 1.0f); // If w = 1.0f, we have a point light
-													  //const vec4 lightPosition(0.0f, 10.0f, 20.0f, 0.0f); // If w = 0.0f, we have a directional light
+	//const vec4 lightPosition(0.0f, 10.0f, 20.0f, 0.0f); // If w = 0.0f, we have a directional light
 
 	glUniform4f(LightPositionID, lightPosition.x, lightPosition.y, lightPosition.z, lightPosition.w);
 	glUniform3f(LightColorID, lightColor.r, lightColor.g, lightColor.b);
 	glUniform3f(LightAttenuationID, lightKc, lightKl, lightKq);
 
-	glDisable(GL_DEPTH_TEST);
-	(*mModel.begin())->Draw();
-	glEnable(GL_DEPTH_TEST);
-	
-	glUseProgram(Renderer::GetShaderProgramID());
-	Renderer::CheckForErrors();
-	
 	// Draw models
-	for (vector<Model*>::iterator it = mModel.begin() + 1; it < mModel.end(); ++it)
+
+	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
 	{
+
 		(*it)->Draw();
 	}
 
+	for (vector<UI_elements*>::iterator it = mUI.begin(); it < mUI.end(); ++it)
+	{
+
+		(*it)->Draw();
+	}
+
+
+
+
+	
+
+
 	// Draw Path Lines
+	
 	// Set Shader for path lines
 	unsigned int prevShader = Renderer::GetCurrentShader();
 	Renderer::SetShader(SHADER_PATH_LINES);
 	glUseProgram(Renderer::GetShaderProgramID());
 
-	// Send the view projection constants to the shader
+	//// Send the view projection constants to the shader
 	VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
 	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
 
@@ -356,12 +278,51 @@ void World::Draw()
 	}
 
     Renderer::CheckForErrors();
+
+	/*mat4 identity(1.0f);
+	GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
+	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &identity[0][0]);
+	GLuint ViewProjectionLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
+	mat4 viewMatrix(1.0f);
+	mat4 projectionMatrix = glm::ortho(0.0, 1024.0, 768.0, 0.0, -1.0, 1.0);
+	mat4 viewProjectionMatrix = projectionMatrix * viewMatrix;
+	glUniformMatrix4fv(ViewProjectionLocation, 1, GL_FALSE, &viewProjectionMatrix[0][0]);
+
+
+	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
+	{
+		if ((*it)->isUI() == true)
+			(*it)->Draw();
+	}
+*/
     
     // Draw Billboards
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     mpBillboardList->Draw();
     glDisable(GL_BLEND);
+
+
+
+
+	
+/*
+	GLfloat array[3];
+	glReadPixels(EventManager::GetMousePositionX(), EventManager::GetMousePositionY(), 1, 1, GL_RGB, GL_FLOAT, array);*/
+
+
+	///*	int count = 0;
+	//	for (int i = 0; i < 3; i++) {
+	//		if (array[i] >= 0)
+	//			count++;
+	//	}
+	//	if (count >= 3)
+	//		buttonState = 5;*/
+
+	getButtonInteraction();
+
+
+
 
 	// Restore previous shader
 	Renderer::SetShader((ShaderType) prevShader);
@@ -396,30 +357,21 @@ void World::LoadScene(const char * scene_path)
 				// Box attributes
 				CubeModel* cube = new CubeModel();
 				cube->Load(iss);
+				cube->setUI(false);
 				mModel.push_back(cube);
 			}
             else if( result == "sphere" )
             {
                 SphereModel* sphere = new SphereModel();
                 sphere->Load(iss);
+				sphere->setUI(false);
                 mModel.push_back(sphere);
             }
-			else if (result == "asteroid")
-			{
-				AsteroidModel* asteroid = new AsteroidModel();
-				asteroid->Load(iss);
-				mModel.push_back(asteroid);
-			}
-			else if (result == "spaceship")
-			{
-				SpaceshipModel* spaceship = new SpaceshipModel();
-				spaceship->Load(iss);
-				mModel.push_back(spaceship);
-			}
 			else if ( result == "animationkey" )
 			{
 				AnimationKey* key = new AnimationKey();
 				key->Load(iss);
+				key->setUI(false);
 				mAnimationKey.push_back(key);
 			}
 			else if (result == "animation")
@@ -428,10 +380,19 @@ void World::LoadScene(const char * scene_path)
 				anim->Load(iss);
 				mAnimation.push_back(anim);
 			}
+			else if (result == "ui")
+			{
+				UI_elements* ui = new UI_elements();
+				ui->Load(iss);
+				ui->setUI(true);
+				mUI.push_back(ui);
+			}
+
 			else if (result == "spline")
 			{
 				BSpline* spline = new BSpline();
 				spline->Load(iss);
+				spline->setUI(false);
 				spline->CreateVertexBuffer();
 
 				// FIXME: This is hardcoded: replace last camera with spline camera
@@ -532,4 +493,82 @@ ParticleDescriptor* World::FindParticleDescriptor(ci_string name)
         }
     }
     return nullptr;
+}
+
+void World::getButtonInteraction() {
+	EventManager::GetMouseButton();
+	if (EventManager::GetMousePositionX()<402
+		&& EventManager::GetMousePositionX()>342 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 5;
+
+	}
+	if (EventManager::GetMousePositionX()<462
+		&& EventManager::GetMousePositionX()>402 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 4;
+	}
+	if (EventManager::GetMousePositionX()<522
+		&& EventManager::GetMousePositionX()>462 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 3;
+	}
+
+	if (EventManager::GetMousePositionX()<582
+		&& EventManager::GetMousePositionX()>522 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 2;
+	}
+
+	if (EventManager::GetMousePositionX()<642
+		&& EventManager::GetMousePositionX()>582 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 1;
+	}
+
+	if (EventManager::GetMousePositionX()<702
+		&& EventManager::GetMousePositionX()>642 &&
+		EventManager::GetMousePositionY()<60
+		&& EventManager::GetMousePositionY()>20 &&
+		EventManager::isClicked()) {
+		buttonState = 0;
+	}
+
+
+	switch (buttonState) {
+	case 0:
+		speed = 10;
+		break;
+	case 1:
+		speed = 1;
+		break;
+	case 2:
+		speed = 0;
+		break;
+
+	case 3: // bird view
+		mCurrentCamera = 0;
+		break;
+	case 4: // third person view
+		mCurrentCamera = 1;
+		break;
+	case 5: // first person view
+		mCurrentCamera = 2;
+		break;
+
+	default:
+		speed = 1;
+	}
+
+
 }

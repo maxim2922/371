@@ -19,16 +19,10 @@ public:
 
 	virtual void Update(float dt) = 0;
 
-	virtual glm::vec3 GetPosition() const { return glm::vec3(0.0f); }
-	virtual float GetHorizontalAngle() const { return 0; }
-	virtual float GetVerticalAngle() const { return 0; }
-	virtual float GetSpeed() const { return 0; }
-	virtual glm::vec3 GetLookAt() const { return glm::vec3(0.0f); }
 	virtual glm::mat4 GetViewMatrix() const = 0;
 	virtual glm::mat4 GetProjectionMatrix() const;
 	glm::mat4 GetViewProjectionMatrix() const;
-	virtual glm::vec3 GetAngledPosition() const { return glm::vec3(0.0f); }
-	virtual void setPosition(glm::vec3 position) {}
+
 private:
 
 };

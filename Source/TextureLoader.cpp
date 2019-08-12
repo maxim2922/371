@@ -31,7 +31,7 @@ int TextureLoader::LoadTexture(const char * imagepath)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
-    // Retrieve width and height
+    // Retrieve width and hight
     int width = FreeImage_GetWidth(image32bits);
     int height = FreeImage_GetHeight(image32bits);
     

@@ -43,7 +43,7 @@ vec3 ambient = lightColor*materialCoefficients.x;
 
 
 	// set the fragment color to the interpolated vertex color
-	color = vec4(vec3(textureColor)*(ambient+diffuse+specular),1);
+	color = vec4(vec3(textureColor),1);
 	if(color.a <= 0.02f)
         discard;
 }

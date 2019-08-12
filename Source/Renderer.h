@@ -8,7 +8,6 @@
 //
 
 #pragma once
-#include <string>
 
 struct GLFWwindow;
 
@@ -26,7 +25,6 @@ enum ShaderType
 	SHADER_PATH_LINES,
 	SHADER_BLUE,
     SHADER_TEXTURED,
-	SHADER_SKYBOX,
 	NUM_SHADERS
 };
 

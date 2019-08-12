@@ -31,6 +31,14 @@ public:
 	static void DisableMouseCursor();
     static float GetRandomFloat(float min, float max);
 
+
+
+	static float GetMousePositionX();
+	static float GetMousePositionY();
+	static void GetMouseButton();
+
+	static bool isClicked();
+
 private:
 	// Time
 	static double sLastFrameTime;
@@ -44,4 +52,7 @@ private:
 
 	// Window
 	static GLFWwindow* spWindow;
+
+	static bool clicked;
+	static bool lastState;
 };

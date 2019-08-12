@@ -20,10 +20,7 @@ public:
 
 	virtual glm::mat4 GetViewMatrix() const;
 	virtual void toggleMouse(bool b);
-	glm::vec3 GetPosition() const { return mPosition; }
-	glm::vec3 GetAngledPosition() { return glm::vec3(0.0f); }
-	void setPosition(glm::vec3 position);
-	void setLookAt(glm::vec3 newLookAt);
+
 private:
 	glm::vec3 mPosition;	
 	float mHorizontalAngle; // horizontal angle
