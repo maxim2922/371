@@ -181,13 +181,34 @@ void World::Update(float dt)
 
 	// Update current Camera
 	mCamera[mCurrentCamera]->Update(dt);
-	if (lastMouseButtonState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-		mModel.push_back(new AsteroidModel(GetCurrentCamera()->GetPosition() + vec3(0, 0, -0.1f), -inverse(GetCurrentCamera()->GetViewMatrix())[2], vec3(0.1f, 0.1f, 0.1f)));
+	if (lastMouseButtonState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS
+		&& glfwGetKey(EventManager::GetWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+		for (vector<Model*>::iterator it = mModel.begin() + 2; it < mModel.end(); ++it)
+		{
+			if ((*it)->IntersectsRay(fp->GetPosition(), vec3(-inverse(GetCurrentCamera()->GetViewMatrix())[2])) == true) {
+				fp->toggleMouse(true);
+				fp->setPosition((*it)->GetPosition()+vec3(0.0f, 0.0f, 10.0f));
+				fp->setLookAt((*it)->GetPosition());
+				mCurrentCamera = 0;
+				printf("Radius is %f and Velocity is %f\n", (*it)->GetRadius(), (*it)->GetVelocity());
+				mCamera[mCurrentCamera]->Update(dt);
+			}
+		}
+	}
+	else if (lastMouseButtonState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+		if (mCurrentCamera == 3) {
+			mModel.push_back(new AsteroidModel(GetCurrentCamera()->GetPosition() + vec3(0, 0.15f, -0.1f),
+				vec3(-inverse(GetCurrentCamera()->GetViewMatrix())[2]), vec3(0.1f, 0.1f, 0.1f)));
+		}
+		else {
+			mModel.push_back(new AsteroidModel(GetCurrentCamera()->GetPosition(),
+				vec3(-inverse(GetCurrentCamera()->GetViewMatrix())[2]), vec3(0.1f, 0.1f, 0.1f)));
+		}
 	}
 	lastMouseButtonState = glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
 
 	//Check collisions
-	for (vector<Model*>::iterator it = mModel.begin() + 1; it < mModel.end(); ++it)
+	for (vector<Model*>::iterator it = mModel.begin() + 2; it < mModel.end(); ++it)
 	{
 
 		//Intersphere collisions
@@ -298,7 +319,10 @@ void World::Draw()
 	glDisable(GL_DEPTH_TEST);
 	(*mModel.begin())->Draw();
 	glEnable(GL_DEPTH_TEST);
-
+	
+	glUseProgram(Renderer::GetShaderProgramID());
+	Renderer::CheckForErrors();
+	
 	// Draw models
 	for (vector<Model*>::iterator it = mModel.begin() + 1; it < mModel.end(); ++it)
 	{

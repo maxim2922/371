@@ -230,3 +230,4 @@ void Model::SetVelocity(glm::vec3 newVelocity) {
 void Model::SetMaterialCoefficients(glm::vec4 material) {
 	materialCoefficients = material;
 }
+

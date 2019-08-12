@@ -1401,3 +1401,21 @@ bool SphereModel::ParseLine(const std::vector<ci_string> &token)
         return Model::ParseLine(token);
     }
 }
+
+bool SphereModel::IntersectsRay(glm::vec3 source, glm::vec3 direction) {
+	
+	vec3 center = mPosition;
+	vec3 origin = source;
+	vec3 normDirection = normalize(direction);
+	
+	float t = length(center - origin);
+	
+	if (pow(origin.x + t * normDirection.x - center.x, 2) + pow(origin.y + t * normDirection.y - center.y, 2)
+		+ pow(origin.z + t * normDirection.z - center.z, 2) <= pow(boundingSphereRadius, 2)) {
+		return true;
+	}
+	else {
+		return false;
+	}
+	
+}

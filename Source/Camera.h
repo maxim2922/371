@@ -28,7 +28,7 @@ public:
 	virtual glm::mat4 GetProjectionMatrix() const;
 	glm::mat4 GetViewProjectionMatrix() const;
 	virtual glm::vec3 GetAngledPosition() const { return glm::vec3(0.0f); }
-
+	virtual void setPosition(glm::vec3 position) {}
 private:
 
 };

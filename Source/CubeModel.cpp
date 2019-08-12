@@ -9,6 +9,8 @@
 
 #include "CubeModel.h"
 #include "Renderer.h"
+#include "World.h"
+#include "Camera.h"
 
 using namespace glm;
 
@@ -153,11 +155,28 @@ void CubeModel::Update(float dt)
 
 void CubeModel::Draw()
 {
+	ShaderType oldShader = (ShaderType)Renderer::GetCurrentShader();
+
 	if (mTextureValid)
-	{
+	{	
+		Renderer::SetShader(SHADER_SKYBOX);
+		glUseProgram(Renderer::GetShaderProgramID());
+		Renderer::CheckForErrors();
+
+
+		GLuint VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
+
+		// Send the view projection constants to the shader
+		const Camera* currentCamera = World::GetInstance()->GetCurrentCamera();
+		mat4 VP = currentCamera->GetViewProjectionMatrix();
+		glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
+
 		GLuint textureLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "myTextureSampler");
 		glActiveTexture(GL_TEXTURE0);
+		Renderer::CheckForErrors();
+
 		glBindTexture(GL_TEXTURE_2D, mTextureID);
+		Renderer::CheckForErrors();
 	}
 	// Draw the Vertex Buffer
 	// Note this draws a unit Cube
@@ -170,6 +189,8 @@ void CubeModel::Draw()
 
 	// Draw the triangles !
 	glDrawArrays(GL_TRIANGLES, 0, 36); // 36 vertices: 3 * 2 * 6 (3 per triangle, 2 triangles per face, 6 faces)
+	Renderer::CheckForErrors();
+	Renderer::SetShader(oldShader);
 }
 
 bool CubeModel::ParseLine(const std::vector<ci_string> &token)

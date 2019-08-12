@@ -2660,6 +2660,7 @@ AsteroidModel::AsteroidModel(vec3 location, vec3 velocity, vec3 size) : Model()
 		vertexBuffer2.push_back(v2);
 	}
 	boundingSphereRadius = distance(minimum, maximum) / 2;
+	boundingSphereRadius *= std::max(std::max(mScaling.x, mScaling.y), mScaling.z);
 	for (int i = 1; i < numOfVertices; i++)
 	{
 		if (tf[i])

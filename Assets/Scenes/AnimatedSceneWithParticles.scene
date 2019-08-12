@@ -395,8 +395,12 @@ name     = "Skybox"
 scaling  = 1.0 1.0 1.0
 position = 0.0 0.0 0.0
 #rotation = 0.0 0.0 1.0 0.0
-materialCoefficients = 1.5 0.0 0.0 0.0
 texturePath = "../Assets/Textures/3.png"
+
+[Spaceship]
+name	= "spacecraft"
+materialCoefficients = 0.8 0.6 0.0 0.0
+texturePath = "../Assets/Textures/f.png"
 
 [Sphere]
 name     = "Sun"
@@ -407,17 +411,8 @@ particleEmitter = "Fountain"
 materialCoefficients = 1.0 0.0 0.0 0.0
 texturePath = "../Assets/Textures/sun.jpg"
 velocity = 0.0 0.0 0.0
-mass = 1000.0
+mass = 1000000000.0
 
-
-[Asteroid]
-name     = "Asteroid"
-scaling  = 0.1 0.1 0.1
-position = 3.0 5.0 10.0
-rotation = 0.0 1.0 0.0 180
-materialCoefficients = 0.4 0.6 0.0 0.0
-texturePath = "../Assets/Textures/mercury.jpg"
-velocity = 0.0 0.0 0.0
 
 [Sphere]
 name     = "Mercury"
@@ -427,7 +422,7 @@ rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimMercury"
 materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/mercury.jpg"
-mass = 1000.0
+mass = 1000000000.0
 
 [Sphere]
 name     = "Venus"
@@ -437,7 +432,7 @@ rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimVenus"
 materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/venus.jpg"
-mass = 1000.0
+mass = 1000000000.0
 
 [Sphere]
 name     = "Earth"
@@ -447,7 +442,7 @@ rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimEarth"
 materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/earth.jpg"
-mass = 1000.0
+mass = 1000000000.0
 
 [Sphere]
 name     = "Mars"
@@ -457,7 +452,7 @@ rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimMars"
 materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/mars.jpg"
-mass = 1000.0
+mass = 1000000000.0
 
 [Sphere]
 name     = "Jupiter"
@@ -467,7 +462,7 @@ rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimJupiter"
 materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/jupiter.jpg"
-mass = 1000.0
+mass = 1000000000.0
 
 [Sphere]
 name     = "Saturn"
@@ -477,7 +472,7 @@ rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimSaturn"
 materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/saturn.jpg"
-mass = 1000.0
+mass = 1000000000.0
 
 [Sphere]
 name     = "Uranus"
@@ -487,7 +482,7 @@ rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimUranus"
 materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/uranus.jpg"
-mass = 1000.0
+mass = 1000000000.0
 
 [Sphere]
 name     = "Neptune"
@@ -497,9 +492,5 @@ rotation = 0.0 1.0 0.0 180
 animation = "CycleAnimNeptune"
 materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/neptune.jpg"
-mass = 1000.0
+mass = 1000000000.0
 
-[Spaceship]
-name	= "spacecraft"
-materialCoefficients = 5.0 0.0 0.0 0.0
-texturePath = "../Assets/Textures/f.png"
