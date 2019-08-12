@@ -19,7 +19,7 @@ SpaceshipModel::SpaceshipModel(vec3 size) : Model(), mLookAt(0.0f, 0.0f, -1.0f)
 	std::vector<vec3> normals;
 
 	ObjLoader* modelLoader = new ObjLoader();
-	modelLoader->loadObj("../Assets/Models/f.obj", vertices, uvs, normals);
+	modelLoader->loadObj("../Assets/Models/spaceship1.obj", vertices, uvs, normals);
 
 	vertexCount = vertices.size();
 
@@ -93,7 +93,7 @@ void SpaceshipModel::Update(float dt)
 		mPosition = cam->GetPosition();
 
 		mHorizontalRotationAngleInDegrees = cam->GetHorizontalAngle() + 90;
-		mVerticalRotationAngleInDegrees = -cam->GetVerticalAngle();
+		mVerticalRotationAngleInDegrees = -cam->GetVerticalAngle()-5;
 	}
 }
 
@@ -118,7 +118,7 @@ void SpaceshipModel::Draw()
 		mat4 spaceshipWorldMatrix = translate(mat4(1.0f), mPosition) *
 			rotate(mat4(1.0f), radians(mHorizontalRotationAngleInDegrees), vec3(0.0f, 1.0f, 0.0f)) *
 			rotate(mat4(1.0f), radians(mVerticalRotationAngleInDegrees), vec3(1.0f, 0.0f, 0.0f)) *
-			scale(mat4(1.0f), vec3(0.1f, 0.1f, 0.1f));
+			scale(mat4(1.0f), vec3(0.006f, 0.006f, 0.006f));
 
 		GLuint worldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
 		glUniformMatrix4fv(worldMatrixLocation, 1, GL_FALSE, &spaceshipWorldMatrix[0][0]);
@@ -127,7 +127,7 @@ void SpaceshipModel::Draw()
 	{
 		mat4 spaceshipWorldMatrix = translate(mat4(1.0f), vec3(0.0f, 0.0f, 1.0f)) *
 			rotate(mat4(1.0f), radians(mHorizontalRotationAngleInDegrees), vec3(0.0f, 1.0f, 0.0f)) *
-			scale(mat4(1.0f), vec3(0.01f, 0.01f, 0.01f));
+			scale(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f));
 
 		GLuint worldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
 		glUniformMatrix4fv(worldMatrixLocation, 1, GL_FALSE, &spaceshipWorldMatrix[0][0]);
