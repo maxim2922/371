@@ -35,16 +35,18 @@ using namespace glm;
 
 World* World::instance;
 FirstPersonCamera* fp = new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f));
-
+SphereModel* focusPlanet;
 
 World::World()
 {
     instance = this;
-
+	
 	// Setup Camera
 	mCamera.push_back(fp);
 	mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 	mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+	//mCamera.push_back(new BSplineCamera(bs, 10.0f));
+
 	mCurrentCamera = 0;
 
     
@@ -145,6 +147,15 @@ void World::Update(float dt)
 			mCurrentCamera = 2;
 		}
 	}
+	else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_4) == GLFW_PRESS)
+	{
+		if (mCamera.size() > 0)
+		{
+			fp->setPosition(focusPlanet->GetPosition());
+			mCurrentCamera = 0;
+		}
+	}
+
 
 	// Spacebar to change the shader
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_0 ) == GLFW_PRESS)
@@ -175,6 +186,11 @@ void World::Update(float dt)
 	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
 	{
 		(*it)->Update(dt);
+
+		if ((*it)->GetName() == focusPlanet->GetName() && (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_4) == GLFW_PRESS)) {
+			fp->setPosition((*it)->GetPosition());
+			fp->Update(dt);
+		}
 	}
     
     // Update billboards
@@ -309,6 +325,10 @@ void World::LoadScene(const char * scene_path)
                 SphereModel* sphere = new SphereModel();
                 sphere->Load(iss);
                 mModel.push_back(sphere);
+
+				if (mModel.size() >= 5) {
+					focusPlanet = sphere;
+				}
             }
 			else if ( result == "animationkey" )
 			{
