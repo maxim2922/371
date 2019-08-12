@@ -9,11 +9,11 @@
 
 #pragma once
 
-
 #include "ParsingHelper.h"
 #include "Billboard.h"
-#include <vector>
 
+#include <vector>
+ 
 class Camera;
 class Model;
 class Animation;
@@ -45,7 +45,7 @@ public:
     void RemoveParticleSystem(ParticleSystem* particleSystem);
     void AddParticleDescriptor(ParticleDescriptor* particleDescriptor);
 
-    
+	void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 private:
     static World* instance;
     

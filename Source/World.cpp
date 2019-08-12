@@ -29,6 +29,9 @@
 #include "BSpline.h"
 #include "BSplineCamera.h"
 
+#include <iostream>   // std::cout
+#include <string> 
+
 
 using namespace std;
 using namespace glm;
@@ -174,6 +177,7 @@ void World::Update(float dt)
 	// Update models
 	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
 	{
+		//printf("%s\n", (*it)->GetName().c_str());
 		(*it)->Update(dt);
 	}
     
@@ -259,6 +263,9 @@ void World::Draw()
 
 		(*it)->Draw();
 	}
+
+	glfwSetCursorPosCallback(EventManager::GetWindow(), cursor_position_callback);
+
 
     Renderer::CheckForErrors();
     
@@ -426,4 +433,22 @@ ParticleDescriptor* World::FindParticleDescriptor(ci_string name)
         }
     }
     return nullptr;
+}
+
+void World::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	// Update models
+	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
+	{
+		//printf("%s\n", (*it)->GetName().c_str());
+		//(*it);
+	}
+
+	//float b = glm::dot((1.0), (vec2(xpos, ypos));
+	printf("\nx: ");
+	cout << xpos;
+	printf(", y: ");
+	cout << ypos;
+	printf("\n");
+
 }
