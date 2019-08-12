@@ -29,6 +29,3 @@ mat4 Camera::GetProjectionMatrix() const
 {
 	return perspective(45.0f, 4.0f / 3.0f, 0.1f, 10000.0f);
 }
-vec3 Camera::GetPosition() const {
-	return vec3(0, 0, 0);
-}
