@@ -585,7 +585,7 @@ void World::getButtonInteraction() {
 		EventManager::GetMousePositionY()<60
 		&& EventManager::GetMousePositionY()>20 &&
 		EventManager::isClicked()) {
-		buttonState = 0;
+		buttonState = 5;
 		mUI[0]->setTexture("../Assets/Textures/first_hover.png");
 		mUI[1]->setTexture("../Assets/Textures/ThirdPerson.png");
 		mUI[2]->setTexture("../Assets/Textures/BirdView.png");
@@ -598,7 +598,7 @@ void World::getButtonInteraction() {
 		EventManager::GetMousePositionY()<60
 		&& EventManager::GetMousePositionY()>20 &&
 		EventManager::isClicked()) {
-		buttonState = 1;
+		buttonState = 4;
 		mUI[0]->setTexture("../Assets/Textures/FirstPerson.png");
 		mUI[1]->setTexture("../Assets/Textures/third_hover.png");
 		mUI[2]->setTexture("../Assets/Textures/BirdView.png");
@@ -610,7 +610,7 @@ void World::getButtonInteraction() {
 		EventManager::GetMousePositionY()<60
 		&& EventManager::GetMousePositionY()>20 &&
 		EventManager::isClicked()) {
-		buttonState = 2;
+		buttonState = 3;
 		mUI[0]->setTexture("../Assets/Textures/FirstPerson.png");
 		mUI[1]->setTexture("../Assets/Textures/ThirdPerson.png");
 		mUI[2]->setTexture("../Assets/Textures/bird_hover.png");
@@ -624,7 +624,7 @@ void World::getButtonInteraction() {
 		EventManager::GetMousePositionY()<60
 		&& EventManager::GetMousePositionY()>20 &&
 		EventManager::isClicked()) {
-		buttonState = 3;
+		buttonState = 2;
 
 		mUI[3]->setTexture("../Assets/Textures/pause_hover.png");
 		mUI[4]->setTexture("../Assets/Textures/1X.png");
@@ -637,7 +637,7 @@ void World::getButtonInteraction() {
 		EventManager::GetMousePositionY()<60
 		&& EventManager::GetMousePositionY()>20 &&
 		EventManager::isClicked()) {
-		buttonState = 4;
+		buttonState = 1;
 	
 		mUI[3]->setTexture("../Assets/Textures/PauseButton.png");
 		mUI[4]->setTexture("../Assets/Textures/1x_hover.png");
@@ -650,7 +650,7 @@ void World::getButtonInteraction() {
 		EventManager::GetMousePositionY()<60
 		&& EventManager::GetMousePositionY()>20 &&
 		EventManager::isClicked()) {
-		buttonState = 5;
+		buttonState = 0;
 	
 		mUI[3]->setTexture("../Assets/Textures/PauseButton.png");
 		mUI[4]->setTexture("../Assets/Textures/1X.png");
