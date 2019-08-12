@@ -141,7 +141,7 @@ void World::Update(float dt)
 	}
 	// User Inputs
 	// 0 1 2 to change the Camera
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_1 ) == GLFW_PRESS)
+	/*if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_1 ) == GLFW_PRESS)
 	{
 		mCurrentCamera = 0;
 	}
@@ -165,7 +165,7 @@ void World::Update(float dt)
 		{
 			mCurrentCamera = 3;
 		}
-	}
+	}*/
 
 	// Spacebar to change the shader
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_0 ) == GLFW_PRESS)

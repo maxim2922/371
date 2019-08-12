@@ -1285,7 +1285,7 @@ AsteroidModel::AsteroidModel(vec3 size) : Model() {
 	(r < r2) ? (r = r2 + r * ((R1 - R2) / R2)) : (r = r);
 	mPosition = vec3(20.0f*r*cos(t), EventManager::GetRandomFloat(-3.0f, 3.0f), 20.0f* r*sin(t));
 
-	float scaling = EventManager::GetRandomFloat(0.1f, 0.3f); //Can adjust value of desired scaling
+	float scaling = EventManager::GetRandomFloat(0.5f, 0.6f); //Can adjust value of desired scaling
 	mScaling = vec3(scaling, scaling, scaling);
 	
 	std::vector<Vertex2> vertexBuffer2;

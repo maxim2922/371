@@ -24,7 +24,7 @@ using namespace glm;
 
 Model::Model(const Model* parent)
 : mName("UNNAMED"), mPosition(0.0f, 0.0f, 0.0f), mScaling(1.0f, 1.0f, 1.0f), mRotationAxis(0.0f, 1.0f, 0.0f),
-  mRotationAngleInDegrees(0.0f), mAnimation(nullptr), mParent(parent)
+  mHorizontalRotationAngleInDegrees(0.0f), mAnimation(nullptr), mParent(parent)
 {
 }
 
@@ -34,6 +34,7 @@ Model::~Model()
 
 void Model::Update(float dt)
 {
+	mPosition += mVelocity * dt;
 }
 
 void Model::Draw()
@@ -95,7 +96,7 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
 			mRotationAxis.x = static_cast<float>(atof(token[2].c_str()));
 			mRotationAxis.y = static_cast<float>(atof(token[3].c_str()));
 			mRotationAxis.z = static_cast<float>(atof(token[4].c_str()));
-			mRotationAngleInDegrees = static_cast<float>(atof(token[5].c_str()));
+			mHorizontalRotationAngleInDegrees = static_cast<float>(atof(token[5].c_str()));
 
 			glm::normalize(mRotationAxis);
 		}
@@ -214,7 +215,7 @@ glm::mat4 Model::GetWorldMatrix() const
 		parentMatrix = mParent->GetWorldMatrix();
 	}
 #endif
-	r = glm::rotate(mat4(1.0f), glm::radians(mRotationAngleInDegrees), mRotationAxis);
+	r = glm::rotate(mat4(1.0f), glm::radians(mHorizontalRotationAngleInDegrees), mRotationAxis);
 	worldMatrix = tr * r * s;
 
 	return parentMatrix * worldMatrix;
@@ -233,7 +234,7 @@ void Model::SetScaling(glm::vec3 scaling)
 void Model::SetRotation(glm::vec3 axis, float angleDegrees)
 {
 	mRotationAxis = axis;
-	mRotationAngleInDegrees = angleDegrees;
+	mHorizontalRotationAngleInDegrees = angleDegrees;
 }
 
 void Model::SetVelocity(glm::vec3 newVelocity) {

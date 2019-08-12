@@ -97,7 +97,7 @@ void RingModel::Draw()
 	glBindBuffer(GL_ARRAY_BUFFER, mVAO);
 
 	mat4 ringWorldMatrix = translate(mat4(1.0f), mPosition) *
-		rotate(mat4(1.0f), radians(mRotationAngleInDegrees), vec3(0.0f, 1.0f, 0.0f)) *
+		rotate(mat4(1.0f), radians(mHorizontalRotationAngleInDegrees), vec3(0.0f, 1.0f, 0.0f)) *
 		scale(mat4(1.0f), vec3(0.1f, 0.1f, 0.1f));
 
 

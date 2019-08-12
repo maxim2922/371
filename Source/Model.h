@@ -41,7 +41,7 @@ public:
 	glm::vec3 GetPosition() const		{ return mPosition; }
 	glm::vec3 GetScaling() const		{ return mScaling; }
 	glm::vec3 GetRotationAxis() const	{ return mRotationAxis; }
-	float     GetRotationAngle() const	{ return mRotationAngleInDegrees; }
+	float     GetRotationAngle() const	{ return mHorizontalRotationAngleInDegrees; }
     ci_string GetName()                 { return mName; }
 	glm::vec4 GetMaterialCoefficients() const { return materialCoefficients; }
 	glm::vec3 GetVelocity() const { return mVelocity; }
@@ -55,7 +55,8 @@ protected:
 	glm::vec3 mPosition;
 	glm::vec3 mScaling;
 	glm::vec3 mRotationAxis;
-	float     mRotationAngleInDegrees;
+	float     mHorizontalRotationAngleInDegrees;
+	float     mVerticalRotationAngleInDegrees;
 	glm::vec4 materialCoefficients;
 	glm::vec3 mVelocity = glm::vec3(0, 0, 0);
 	float boundingSphereRadius = 0;
