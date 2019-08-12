@@ -16,7 +16,9 @@ public:
 	float GetSpeed() const { return mSpeed; }
 	glm::vec3 GetLookAt() const { return mLookAt; }
 	glm::vec3 GetAngledPosition() const;
-
+	void setPosition(glm::vec3 position);
+	void setLookAt(glm::vec3 newLookAt);
+	virtual void toggleMouse(bool b);
 private:
 	glm::vec3 mPosition;
 	float mHorizontalAngle; // horizontal angle

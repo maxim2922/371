@@ -36,6 +36,9 @@ float  EventManager::sMouseDeltaY = 0.0f;
 // Window
 GLFWwindow* EventManager::spWindow = nullptr;
 
+bool EventManager::clicked = false;
+bool EventManager::lastState = GLFW_RELEASE;
+
 
 void EventManager::Initialize()
 {
@@ -160,3 +163,38 @@ float EventManager::GetRandomFloat(float min, float max)
 
     return min + value*(max - min);
 }
+
+
+float EventManager::GetMousePositionX()
+{
+	glfwPollEvents();
+	double x, y;
+	glfwGetCursorPos(GetWindow(), &x, &y);
+	return x;
+}
+float EventManager::GetMousePositionY()
+{
+	glfwPollEvents();
+	double x, y;
+	glfwGetCursorPos(spWindow, &x, &y);
+	return y;
+}
+void EventManager::GetMouseButton() {
+
+	int state = glfwGetMouseButton(GetWindow(),
+		GLFW_MOUSE_BUTTON_LEFT);
+	if (state == GLFW_PRESS && state != lastState)
+	{
+		clicked = true;
+	}
+	if (state == GLFW_RELEASE) {
+		clicked = false;
+	}
+	lastState = state;
+}
+
+bool EventManager::isClicked()
+{
+	return clicked;
+}
+

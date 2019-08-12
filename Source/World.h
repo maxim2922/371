@@ -22,6 +22,7 @@ class ParticleSystem;
 class ParticleDescriptor;
 class BSpline;
 class AsteroidModel;
+class UI_elements;
 
 class World
 {
@@ -45,11 +46,15 @@ public:
     void AddParticleSystem(ParticleSystem* particleSystem);
     void RemoveParticleSystem(ParticleSystem* particleSystem);
     void AddParticleDescriptor(ParticleDescriptor* particleDescriptor);
+
+
+	void getButtonInteraction();
     
 private:
     static World* instance;
     
 	std::vector<Model*> mModel;
+	std::vector<UI_elements*> mUI;
     std::vector<Animation*> mAnimation;
     std::vector<AnimationKey*> mAnimationKey;
 	std::vector<Camera*> mCamera;
@@ -57,6 +62,8 @@ private:
     std::vector<ParticleSystem*> mParticleSystemList;
     std::vector<ParticleDescriptor*> mParticleDescriptorList;
 	unsigned int mCurrentCamera;
+	int buttonState = 1;
+	double speed = 1;
 
     BillboardList* mpBillboardList;
 };
