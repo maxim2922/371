@@ -78,7 +78,7 @@ key      = "KeyCycleMercury4"  time = 5.5f
 key      = "KeyCycleMercury3"  time = 6.6f
 key      = "KeyCycleMercury2"  time = 7.7f
 key      = "KeyCycleMercury1"  time = 8.8f
-animationSpeed = 0.3f
+animationSpeed = 0.4f
 
 [AnimationKey]
 name     = "KeyCycleVenus1"
