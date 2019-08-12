@@ -21,7 +21,6 @@ class AnimationKey;
 class ParticleSystem;
 class ParticleDescriptor;
 class BSpline;
-class AsteroidModel;
 
 class World
 {
@@ -38,6 +37,7 @@ public:
     Animation* FindAnimation(ci_string animName);
     AnimationKey* FindAnimationKey(ci_string keyName);
     ParticleDescriptor* FindParticleDescriptor(ci_string name);
+	Model* FindParentModel(ci_string name);
 
     const Camera* GetCurrentCamera() const;
     void AddBillboard(Billboard* b);
@@ -45,6 +45,7 @@ public:
     void AddParticleSystem(ParticleSystem* particleSystem);
     void RemoveParticleSystem(ParticleSystem* particleSystem);
     void AddParticleDescriptor(ParticleDescriptor* particleDescriptor);
+	
     
 private:
     static World* instance;

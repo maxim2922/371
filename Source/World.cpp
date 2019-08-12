@@ -17,6 +17,7 @@
 
 #include "CubeModel.h"
 #include "SphereModel.h"
+#include "RingModel.h"
 #include "SpaceshipModel.h"
 #include "Animation.h"
 #include "Billboard.h"
@@ -44,11 +45,10 @@ World::World()
 
 	// Setup Camera
 	mCamera.push_back(fp);
-	mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-	mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+	mCamera.push_back(new StaticCamera(vec3(3.0f, 500.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+	mCamera.push_back(new StaticCamera(vec3(0.5f, 0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 	mCamera.push_back(new ThirdPersonCamera(vec3(3.0f, 5.0f, 20.0f)));
 	mCurrentCamera = 0;
-
     
 #if defined(PLATFORM_OSX)
 //    int billboardTextureID = TextureLoader::LoadTexture("Textures/BillboardTest.bmp");
@@ -110,7 +110,7 @@ World::~World()
 		delete *it;
 	}
 	mSpline.clear();
-    
+
 	delete mpBillboardList;
 }
 
@@ -128,7 +128,6 @@ void World::Update(float dt)
 	else if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
 		fp->toggleMouse(false);
 	}
-
 	// User Inputs
 	// 0 1 2 to change the Camera
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_1 ) == GLFW_PRESS)
@@ -298,7 +297,6 @@ void World::Draw()
 	glDisable(GL_DEPTH_TEST);
 	(*mModel.begin())->Draw();
 	glEnable(GL_DEPTH_TEST);
-
 	// Draw models
 	for (vector<Model*>::iterator it = mModel.begin() + 1; it < mModel.end(); ++it)
 	{
@@ -306,6 +304,7 @@ void World::Draw()
 	}
 
 	// Draw Path Lines
+	
 	// Set Shader for path lines
 	unsigned int prevShader = Renderer::GetCurrentShader();
 	Renderer::SetShader(SHADER_PATH_LINES);
@@ -380,6 +379,12 @@ void World::LoadScene(const char * scene_path)
                 sphere->Load(iss);
                 mModel.push_back(sphere);
             }
+			else if (result == "ring")
+			{
+				RingModel* ring = new RingModel();
+				ring->Load(iss);
+				mModel.push_back(ring);
+			}
 			else if (result == "asteroid")
 			{
 				AsteroidModel* asteroid = new AsteroidModel();
@@ -466,6 +471,18 @@ AnimationKey* World::FindAnimationKey(ci_string keyName)
     }
     return nullptr;
 }
+
+Model* World::FindParentModel(ci_string name)
+{
+	for (std::vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
+	{
+		if ((*it)->GetName() == name)
+		{
+			return *it;
+		}
+	}
+	return nullptr;
+ }
 
 const Camera* World::GetCurrentCamera() const
 {
