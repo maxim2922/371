@@ -8,13 +8,31 @@ rotation =  0.0f 1.0f 0.0f -180.0f
 name     = "KeyCycleSun2"
 position = 0.0 2.0 0.0
 
+[AnimationKey]
+name     = "KeyCycleSun3"
+position = 0.0 2.0 0.0
+
+[AnimationKey]
+name     = "KeyCycleSun4"
+position = 0.0 2.0 0.0
+
+[AnimationKey]
+name     = "KeyCycleSun5"
+position = 0.0 2.0 0.0
+
+[AnimationKey]
+name     = "KeyCycleSun6"
+position = 0.0 2.0 0.0
+
 [Animation]
 name     = "CycleAnimSun"
 key      = "KeyCycleSun1"  time = 0.0f
-key      = "KeyCycleSun2"  time = 30.0f
-key      = "KeyCycleSun1"  time = 60.0f
-animationSpeed = 0.5f
-
+key      = "KeyCycleSun3"  time = 40.0f
+key      = "KeyCycleSun4"  time = 80.0f
+key      = "KeyCycleSun5"  time = 120.0f
+key      = "KeyCycleSun6"  time = 160.0f
+key      = "KeyCycleSun1"  time = 200.0f
+animationSpeed = 0.8f
 
 [AnimationKey]
 name     = "KeyCycleMercury1"
@@ -60,7 +78,7 @@ key      = "KeyCycleMercury4"  time = 5.5f
 key      = "KeyCycleMercury3"  time = 6.6f
 key      = "KeyCycleMercury2"  time = 7.7f
 key      = "KeyCycleMercury1"  time = 8.8f
-animationSpeed = 0.3f
+animationSpeed = 0.4f
 
 [AnimationKey]
 name     = "KeyCycleVenus1"
@@ -106,7 +124,7 @@ key      = "KeyCycleVenus6"  time = 14.0f
 key      = "KeyCycleVenus7"  time = 16.8f
 key      = "KeyCycleVenus8"  time = 19.6f
 key      = "KeyCycleVenus1"  time = 22.4f
-animationSpeed = 0.2f
+animationSpeed = 0.5f
 
 [AnimationKey]
 name     = "KeyCycleEarth1"

@@ -38,7 +38,7 @@ using namespace std;
 using namespace glm;
 
 World* World::instance;
-FirstPersonCamera* fp = new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f));
+FirstPersonCamera* fp = new FirstPersonCamera(vec3(3.0f, 10.0f, 50.0f));
 ThirdPersonCamera* tp = new ThirdPersonCamera(vec3(3.0f, 5.0f, 20.0f));
 
 World::World()
