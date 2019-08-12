@@ -13,9 +13,11 @@
 
 #include "StaticCamera.h"
 #include "FirstPersonCamera.h"
+#include "ThirdPersonCamera.h"
 
 #include "CubeModel.h"
 #include "SphereModel.h"
+#include "SpaceshipModel.h"
 #include "Animation.h"
 #include "Billboard.h"
 #include <GLFW/glfw3.h>
@@ -29,12 +31,12 @@
 #include "BSpline.h"
 #include "BSplineCamera.h"
 #include "AsteroidModel.h"
+
 using namespace std;
 using namespace glm;
 
 World* World::instance;
 FirstPersonCamera* fp = new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f));
-
 
 World::World()
 {
@@ -42,6 +44,7 @@ World::World()
 
 	// Setup Camera
 	mCamera.push_back(fp);
+	mCamera.push_back(new ThirdPersonCamera(vec3(3.0f, 5.0f, 20.0f)));
 	mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 	mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 	mCurrentCamera = 0;
@@ -57,9 +60,6 @@ World::World()
     assert(billboardTextureID != 0);
 
     mpBillboardList = new BillboardList(2048, billboardTextureID);
-
-    
-    
 }
 
 World::~World()
@@ -104,13 +104,12 @@ World::~World()
         delete *it;
     }
     mParticleDescriptorList.clear();
-	
+
 	for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it)
 	{
 		delete *it;
 	}
 	mSpline.clear();
-
     
 	delete mpBillboardList;
 }
@@ -129,7 +128,7 @@ void World::Update(float dt)
 	else if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
 		fp->toggleMouse(false);
 	}
-	
+
 	// User Inputs
 	// 0 1 2 to change the Camera
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_1 ) == GLFW_PRESS)
@@ -148,6 +147,13 @@ void World::Update(float dt)
 		if (mCamera.size() > 2)
 		{
 			mCurrentCamera = 2;
+		}
+	}
+	else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_4) == GLFW_PRESS)
+	{
+		if (mCamera.size() > 3)
+		{
+			mCurrentCamera = 3;
 		}
 	}
 
@@ -176,12 +182,12 @@ void World::Update(float dt)
 	// Update current Camera
 	mCamera[mCurrentCamera]->Update(dt);
 	if (lastMouseButtonState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-		mModel.push_back(new AsteroidModel(fp->GetPosition()+vec3(0,0,-0.1f), -inverse(fp->GetViewMatrix())[2], vec3(0.1f, 0.1f, 0.1f)));
+		mModel.push_back(new AsteroidModel(fp->GetPosition() + vec3(0, 0, -0.1f), -inverse(fp->GetViewMatrix())[2], vec3(0.1f, 0.1f, 0.1f)));
 	}
-	lastMouseButtonState=glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
+	lastMouseButtonState = glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
 
 	//Check collisions
-	for (vector<Model*>::iterator it = mModel.begin()+1; it < mModel.end(); ++it)
+	for (vector<Model*>::iterator it = mModel.begin() + 1; it < mModel.end(); ++it)
 	{
 
 		//Intersphere collisions
@@ -190,7 +196,7 @@ void World::Update(float dt)
 		{
 
 			//Models can't collide with themselves, and both models cant be projectiles
-			if (it != it2) 
+			if (it != it2)
 			{
 				Model* m1 = *it;
 				Model* m2 = *it2;
@@ -220,15 +226,17 @@ void World::Update(float dt)
 					m1->SetVelocity(newNormalVelocity1 + tangentMomentum1);
 					m2->SetVelocity(newNormalVelocity2 + tangentMomentum2);
 
-					}
+				}
 
 
 			}
 		}
 	}
+
 	(*mModel.begin())->SetPosition(GetCurrentCamera()->GetPosition());
+
 	// Update models
-	for (vector<Model*>::iterator it = mModel.begin()+1; it < mModel.end(); ++it)
+	for (vector<Model*>::iterator it = mModel.begin() + 1; it < mModel.end(); ++it)
 	{
 		(*it)->Update(dt);
 	}
@@ -277,26 +285,23 @@ void World::Draw()
 	const float lightKl = 0.02f;
 	const float lightKq = 0.002f;
 	const vec4 lightPosition(0.0f, 0.0f, 0.0f, 1.0f); // If w = 1.0f, we have a point light
-	//const vec4 lightPosition(0.0f, 10.0f, 20.0f, 0.0f); // If w = 0.0f, we have a directional light
+													  //const vec4 lightPosition(0.0f, 10.0f, 20.0f, 0.0f); // If w = 0.0f, we have a directional light
 
 	glUniform4f(LightPositionID, lightPosition.x, lightPosition.y, lightPosition.z, lightPosition.w);
 	glUniform3f(LightColorID, lightColor.r, lightColor.g, lightColor.b);
 	glUniform3f(LightAttenuationID, lightKc, lightKl, lightKq);
 
 	glDisable(GL_DEPTH_TEST);
-
 	(*mModel.begin())->Draw();
-
 	glEnable(GL_DEPTH_TEST);
-	
+
 	// Draw models
-	for (vector<Model*>::iterator it = mModel.begin()+1; it < mModel.end(); ++it)
+	for (vector<Model*>::iterator it = mModel.begin() + 1; it < mModel.end(); ++it)
 	{
 		(*it)->Draw();
 	}
 
 	// Draw Path Lines
-	
 	// Set Shader for path lines
 	unsigned int prevShader = Renderer::GetCurrentShader();
 	Renderer::SetShader(SHADER_PATH_LINES);
@@ -329,7 +334,6 @@ void World::Draw()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     mpBillboardList->Draw();
     glDisable(GL_BLEND);
-
 
 	// Restore previous shader
 	Renderer::SetShader((ShaderType) prevShader);
@@ -377,6 +381,12 @@ void World::LoadScene(const char * scene_path)
 				AsteroidModel* asteroid = new AsteroidModel();
 				asteroid->Load(iss);
 				mModel.push_back(asteroid);
+			}
+			else if (result == "spaceship")
+			{
+				SpaceshipModel* spaceship = new SpaceshipModel();
+				spaceship->Load(iss);
+				mModel.push_back(spaceship);
 			}
 			else if ( result == "animationkey" )
 			{
