@@ -34,7 +34,7 @@ private:
 	std::vector<bool> tf;
 
 
-	const float random2 = 1.0f / (rand() % 4 + 4.0f);
+	const float random2 = 1.0f / (rand() % 4 + 5.0f);
 	float random1 = rand() % 30;
 	
 	unsigned int mVAO;
