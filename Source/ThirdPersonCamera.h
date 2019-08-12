@@ -15,6 +15,7 @@ public:
 	float GetVerticalAngle() const { return mVerticalAngle; }
 	float GetSpeed() const { return mSpeed; }
 	glm::vec3 GetLookAt() const { return mLookAt; }
+	glm::vec3 GetAngledPosition() const;
 
 private:
 	glm::vec3 mPosition;

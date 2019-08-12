@@ -44,9 +44,9 @@ World::World()
 
 	// Setup Camera
 	mCamera.push_back(fp);
-	mCamera.push_back(new ThirdPersonCamera(vec3(3.0f, 5.0f, 20.0f)));
 	mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 	mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+	mCamera.push_back(new ThirdPersonCamera(vec3(3.0f, 5.0f, 20.0f)));
 	mCurrentCamera = 0;
 
     
@@ -182,7 +182,7 @@ void World::Update(float dt)
 	// Update current Camera
 	mCamera[mCurrentCamera]->Update(dt);
 	if (lastMouseButtonState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-		mModel.push_back(new AsteroidModel(fp->GetPosition() + vec3(0, 0, -0.1f), -inverse(fp->GetViewMatrix())[2], vec3(0.1f, 0.1f, 0.1f)));
+		mModel.push_back(new AsteroidModel(GetCurrentCamera()->GetPosition() + vec3(0, 0, -0.1f), -inverse(GetCurrentCamera()->GetViewMatrix())[2], vec3(0.1f, 0.1f, 0.1f)));
 	}
 	lastMouseButtonState = glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
 
@@ -234,6 +234,10 @@ void World::Update(float dt)
 	}
 
 	(*mModel.begin())->SetPosition(GetCurrentCamera()->GetPosition());
+	if (mCurrentCamera == 3)
+	{
+		(*mModel.begin())->SetPosition(GetCurrentCamera()->GetAngledPosition());
+	}
 
 	// Update models
 	for (vector<Model*>::iterator it = mModel.begin() + 1; it < mModel.end(); ++it)

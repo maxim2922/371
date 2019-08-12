@@ -92,3 +92,17 @@ mat4 ThirdPersonCamera::GetViewMatrix() const
 
 	return lookAt(position, mPosition, vec3(0.0f, 1.0f, 0.0f));
 }
+
+glm::vec3 ThirdPersonCamera::GetAngledPosition() const {
+	float radius = 5.0f;
+	float theta = radians(mHorizontalAngle);
+	float phi = radians(mVerticalAngle);
+
+
+	vec3 position = mPosition -
+		vec3(radius * cosf(phi) * cosf(theta),
+			radius * sinf(phi),
+			-radius * cosf(phi) * sinf(theta)
+		);
+	return position;
+}

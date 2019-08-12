@@ -498,3 +498,8 @@ animation = "CycleAnimNeptune"
 materialCoefficients = 0.4 0.6 0.0 0.0
 texturePath = "../Assets/Textures/neptune.jpg"
 mass = 1000.0
+
+[Spaceship]
+name	= "spacecraft"
+materialCoefficients = 5.0 0.0 0.0 0.0
+texturePath = "../Assets/Textures/f.png"
