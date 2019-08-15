@@ -18,6 +18,11 @@ private:
 	glm::vec3 mLookAt;
 
 	int vertexCount;
+	float xRotationAngleInDegrees;
+	float yRotationAngleInDegrees;
+	float zRotationAngleInDegrees;
+
+	glm::vec3 scaling;
 
 	unsigned int mVAO;
 	unsigned int mVBO[3];

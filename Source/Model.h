@@ -41,7 +41,7 @@ public:
 	glm::vec3 GetPosition() const		{ return mPosition; }
 	glm::vec3 GetScaling() const		{ return mScaling; }
 	glm::vec3 GetRotationAxis() const	{ return mRotationAxis; }
-	float     GetRotationAngle() const	{ return mHorizontalRotationAngleInDegrees; }
+	float     GetRotationAngle() const	{ return mRotationAngleInDegrees; }
     ci_string GetName()                 { return mName; }
 	glm::vec4 GetMaterialCoefficients() const { return materialCoefficients; }
 	glm::vec3 GetVelocity() const { return mVelocity; }
@@ -55,8 +55,7 @@ protected:
 	glm::vec3 mPosition;
 	glm::vec3 mScaling;
 	glm::vec3 mRotationAxis;
-	float     mHorizontalRotationAngleInDegrees;
-	float     mVerticalRotationAngleInDegrees;
+	float     mRotationAngleInDegrees;
 	glm::vec4 materialCoefficients;
 	glm::vec3 mVelocity = glm::vec3(0, 0, 0);
 	float boundingSphereRadius = 0;
@@ -65,7 +64,7 @@ protected:
 
     // Makes the model follow a list of Animation Keys so it's world transform changes over time
     Animation* mAnimation;
-
+	//TexureMapping: creating the veriables for general texture path
 	int mTextureID;
 	bool mTextureValid = false;
 

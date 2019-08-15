@@ -12,7 +12,7 @@
 using namespace glm;
 using namespace std;
 
-SpaceshipModel::SpaceshipModel(vec3 size) : Model(), mLookAt(0.0f, 0.0f, -1.0f)
+SpaceshipModel::SpaceshipModel(vec3 size) : Model(), mLookAt(0.0f, 0.0f, -1.0f), zRotationAngleInDegrees(0), scaling(0.006f, 0.006f, 0.006f)
 {
 	std::vector<vec3> vertices;
 	std::vector<vec2> uvs;
@@ -85,15 +85,58 @@ bool IsCameraThirdPerson()
 
 void SpaceshipModel::Update(float dt)
 {
-
 	bool cameraThirdPerson = IsCameraThirdPerson();
 
 	if (cameraThirdPerson) {
 		const Camera* cam = World::GetInstance()->GetCurrentCamera();
 		mPosition = cam->GetPosition();
 
-		mHorizontalRotationAngleInDegrees = cam->GetHorizontalAngle() + 90;
-		mVerticalRotationAngleInDegrees = -cam->GetVerticalAngle()-5;
+		// x and y angles
+		yRotationAngleInDegrees = cam->GetHorizontalAngle() + 90;
+		xRotationAngleInDegrees = -cam->GetVerticalAngle()-5;
+
+
+		// tilt calculation
+		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
+		{
+			if (zRotationAngleInDegrees <= 50) {
+				zRotationAngleInDegrees += 1;
+			}
+		}
+
+		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
+		{
+			if (zRotationAngleInDegrees >= -50) {
+				zRotationAngleInDegrees -= 1;
+			}
+		}
+
+		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D) != GLFW_PRESS && glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A) != GLFW_PRESS) {
+			if (zRotationAngleInDegrees < 0) {
+				zRotationAngleInDegrees += 1;
+			}
+			else if (zRotationAngleInDegrees > 0) {
+				zRotationAngleInDegrees -= 1;
+			}
+		}
+
+		// Scaling when accelerating
+		if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
+		{
+			if (scaling.x < 0.007) {
+				scaling += vec3(0.00001f);
+			}
+
+			xRotationAngleInDegrees--;
+			
+		}
+		else {
+			if (scaling.x > 0.006) {
+				scaling -= vec3(0.00002f);
+			}
+
+			xRotationAngleInDegrees++;
+		}
 	}
 }
 
@@ -104,10 +147,6 @@ void SpaceshipModel::Draw()
 	GLuint textureLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "myTextureSampler");
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
 
-
-
-
-
 	glBindVertexArray(mVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, mVAO);
 
@@ -116,9 +155,10 @@ void SpaceshipModel::Draw()
 	if (cameraThirdPerson)
 	{
 		mat4 spaceshipWorldMatrix = translate(mat4(1.0f), mPosition) *
-			rotate(mat4(1.0f), radians(mHorizontalRotationAngleInDegrees), vec3(0.0f, 1.0f, 0.0f)) *
-			rotate(mat4(1.0f), radians(mVerticalRotationAngleInDegrees), vec3(1.0f, 0.0f, 0.0f)) *
-			scale(mat4(1.0f), vec3(0.006f, 0.006f, 0.006f));
+			rotate(mat4(1.0f), radians(yRotationAngleInDegrees), vec3(0.0f, 1.0f, 0.0f)) *
+			rotate(mat4(1.0f), radians(xRotationAngleInDegrees), vec3(1.0f, 0.0f, 0.0f)) *
+			rotate(mat4(1.0f), radians(zRotationAngleInDegrees), vec3(0.0f, 0.0f, 1.0f)) *
+			scale(mat4(1.0f), scaling);
 
 		GLuint worldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
 		glUniformMatrix4fv(worldMatrixLocation, 1, GL_FALSE, &spaceshipWorldMatrix[0][0]);
@@ -126,7 +166,7 @@ void SpaceshipModel::Draw()
 	else
 	{
 		mat4 spaceshipWorldMatrix = translate(mat4(1.0f), vec3(0.0f, 0.0f, 1.0f)) *
-			rotate(mat4(1.0f), radians(mHorizontalRotationAngleInDegrees), vec3(0.0f, 1.0f, 0.0f)) *
+			rotate(mat4(1.0f), radians(mRotationAngleInDegrees), vec3(0.0f, 1.0f, 0.0f)) *
 			scale(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f));
 
 		GLuint worldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");

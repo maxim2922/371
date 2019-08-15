@@ -92,6 +92,7 @@ void ParticleSystem::Update(float dt)
         //          360 degrees about the original velocity vector
 		
 		//Particle->velocity = mpDescriptor->velocity + EventManager::GetRandomFloat(0.0f, mpDescriptor->velocityAngleRandomness);
+		//SunParticles: changing the randomazition so it matchs the wanted output
 		vec4 v = vec4(newParticle->velocity, 0);
 		mat4 r = glm::rotate(mat4(1.0f), glm::radians(EventManager::GetRandomFloat(0.0f,360.0f)),
 			normalize(cross(newParticle->velocity,vec3(1.0f,0.0f,0.0f))));
@@ -133,6 +134,7 @@ void ParticleSystem::Update(float dt)
 				r = (p->currentTime - (p->lifeTime - mpDescriptor->fadeOutTime)) / mpDescriptor->fadeOutTime;
 				p->billboard.color = mix(mpDescriptor->midColor, mpDescriptor->endColor, r);
 			}
+			//SunParticals: changing the velocity based on initial velocity direction
 			p->billboard.size += dt * mpDescriptor->sizeGrowthVelocity;
 			p->velocity += p->velocity*(-2 * dt);
 
