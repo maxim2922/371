@@ -45,9 +45,9 @@ RingModel::RingModel(vec3 size) : Model()
 	glBindBuffer(GL_ARRAY_BUFFER, mVBO[1]);
 
 	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1,
-		3,
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3,
+		2,
 		GL_FLOAT,
 		GL_FALSE,
 		sizeof(vec2),
@@ -97,7 +97,7 @@ void RingModel::Draw()
 	glBindBuffer(GL_ARRAY_BUFFER, mVAO);
 
 	mat4 ringWorldMatrix = translate(mat4(1.0f), mPosition) *
-		rotate(mat4(1.0f), radians(mHorizontalRotationAngleInDegrees), vec3(0.0f, 1.0f, 0.0f)) *
+		rotate(mat4(1.0f), radians(mRotationAngleInDegrees), vec3(0.0f, 1.0f, 0.0f)) *
 		scale(mat4(1.0f), vec3(0.1f, 0.1f, 0.1f));
 
 

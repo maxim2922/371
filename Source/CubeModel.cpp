@@ -18,7 +18,7 @@ CubeModel::CubeModel(vec3 size) : Model()
 {
 	// Create Vertex Buffer for all the verices of the Cube
 	vec3 halfSize = size * 0.5f;
-	
+	//SkyBox: calculationg the uv's manually pased on the position
 	Vertex2 vertexBuffer[] = {  // position,                normal,                  color
 								{ vec3(-0.5f,-0.5f,-0.5f), vec3(1.0f, 0.0f, 0.0f), vec3(1.0f, 0.0f, 0.0f), vec2(0.0f, 1.0f / 3.0f) }, //left - red
 								{ vec3(-0.5f,-0.5f, 0.5f), vec3(1.0f, 0.0f, 0.0f), vec3(1.0f, 0.0f, 0.0f), vec2(0.25f, 1.0f / 3.0f) },
@@ -156,7 +156,7 @@ void CubeModel::Update(float dt)
 void CubeModel::Draw()
 {
 	ShaderType oldShader = (ShaderType)Renderer::GetCurrentShader();
-
+	//TexureMapping: loading the textures into the shader
 	if (mTextureValid)
 	{
 		Renderer::SetShader(SHADER_SKYBOX);

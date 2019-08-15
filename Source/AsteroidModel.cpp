@@ -1285,9 +1285,9 @@ AsteroidModel::AsteroidModel(vec3 size) : Model() {
 	(r < r2) ? (r = r2 + r * ((R1 - R2) / R2)) : (r = r);
 	mPosition = vec3(20.0f*r*cos(t), EventManager::GetRandomFloat(-3.0f, 3.0f), 20.0f* r*sin(t));
 
-	float scaling = EventManager::GetRandomFloat(0.5f, 0.6f); //Can adjust value of desired scaling
+	float scaling = EventManager::GetRandomFloat(0.2f, 0.6f); //Can adjust value of desired scaling
 	mScaling = vec3(scaling, scaling, scaling);
-	
+	//TextureMapping: using the seconadary buffer with the coresponding uv calculation
 	std::vector<Vertex2> vertexBuffer2;
 	numOfVertices = sizeof(vertexBuffer) / sizeof(Vertex);
 	float u;
@@ -1310,6 +1310,7 @@ AsteroidModel::AsteroidModel(vec3 size) : Model() {
 		vertexBuffer2.push_back(v2);
 	}
 	boundingSphereRadius = distance(minimum, maximum) / 2;
+	//HightMap: calculating the reandom hight map
 	for (int i = 1; i < numOfVertices; i++)
 	{
 		if (tf[i])
@@ -2651,7 +2652,7 @@ AsteroidModel::AsteroidModel(vec3 location, vec3 velocity, vec3 size) : Model()
 	mTextureID = TextureLoader::LoadTexture("../Assets/Textures/mercury.jpg");
 	mTextureValid = true;
 	mScaling = size;
-
+	//TextureMapping: using the seconadary buffer with the coresponding uv calculation
 	std::vector<Vertex2> vertexBuffer2;
 	numOfVertices = sizeof(vertexBuffer) / sizeof(Vertex);
 	float u;
@@ -2675,19 +2676,18 @@ AsteroidModel::AsteroidModel(vec3 location, vec3 velocity, vec3 size) : Model()
 	}
 	boundingSphereRadius = distance(minimum, maximum) / 2;
 	boundingSphereRadius *= std::max(std::max(mScaling.x, mScaling.y), mScaling.z);
+	//HightMap: calculating the reandom hight map
 	for (int i = 1; i < numOfVertices; i++)
 	{
 		if (tf[i])
 		{
 			vertexBuffer2[i].position += normalize(vertexBuffer2[i].normal)*random2;
-			//vertexBuffer2[i].UV += vertexBuffer2[i].UV;
 			for (int j = 0; j < numOfVertices; j++)
 				if (vertexBuffer[i].position.x == vertexBuffer[j].position.x && vertexBuffer[i].position.y == vertexBuffer[j].position.y && vertexBuffer[i].position.z == vertexBuffer[j].position.z)
 				{
 					if (j != i)
 					{
 						vertexBuffer2[j].position += normalize(vertexBuffer2[j].normal)*random2;
-						//vertexBuffer2[j].UV += vertexBuffer2[i].UV;
 					}
 				}
 		}

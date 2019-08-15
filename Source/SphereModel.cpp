@@ -1280,6 +1280,8 @@ SphereModel::SphereModel(vec3 size) : Model()
         { vec3(0.173648, -0.000000, -0.984808), vec3(0.173648, -0.000000, -0.984808), vec3(1.0f, 0.05f, 0.05f) },
         { vec3(0.000000, 0.000000, -1.000000), vec3(0.000000, 0.000000, -1.000000), vec3(1.0f, 0.05f, 0.05f) },
     };
+
+	//TexureMapping: using a a secondary vertex buffer with the UV's
 	std::vector<Vertex2> vertexBuffer2;
 	numOfVertices = sizeof(vertexBuffer) / sizeof(Vertex);
 	float u;
@@ -1287,6 +1289,7 @@ SphereModel::SphereModel(vec3 size) : Model()
 	vec3 p;
 	vec3 minimum=vec3(0,0,0);
 	vec3 maximum=vec3(0,0,0);
+	//uvCalculation for TexureMapping: Calculation the coresponding uv's based on the position of the vertex
 	for (int i = 0; i < numOfVertices; i++)
 	{
 		minimum = vec3(min(vertexBuffer[i].position.x, minimum.x), min(vertexBuffer[i].position.y, minimum.y),
@@ -1368,6 +1371,7 @@ void SphereModel::Update(float dt)
 
 void SphereModel::Draw()
 {
+	//TexureMapping: loading the textures into the shader
 	if (mTextureValid)
 	{
 		GLuint textureLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "myTextureSampler");
