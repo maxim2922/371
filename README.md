@@ -8,7 +8,7 @@ comp 371
 
 2. Extract the folder, open it, and copy the 'irrKlang-1.6.0' folder into ThirdParty
 
-3. ThirdParty/bin/win32-visualStudio
+3. ThirdParty/irrKlang-1.6.0/bin/win32-visualStudio
 	copy these to Framework/Bin
 	- ikpFlac.dll
 	- ikpMP3.dll
