@@ -19,6 +19,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <irrKlang.h>
+
+using namespace irrklang;
+#pragma comment(lib, "irrKlang.lib") 
 
 using namespace std;
 
@@ -38,7 +42,7 @@ GLFWwindow* EventManager::spWindow = nullptr;
 
 bool EventManager::clicked = false;
 bool EventManager::lastState = GLFW_RELEASE;
-
+ISoundEngine* engine = createIrrKlangDevice();
 void EventManager::Initialize()
 {
 	// Initialise GLFW
@@ -93,13 +97,24 @@ void EventManager::Initialize()
 	// Initial time
 	sLastFrameTime = glfwGetTime();
     srand((unsigned int) time(nullptr));
+
+
+	// start the sound engine with default parameters
+
+	if (!engine)
+		Renderer::CheckForErrors(); // error starting up the engine
+
+	engine->play2D("../Assets/Audio/space_sound.wav", true);
+	
 }
+
 
 void EventManager::Shutdown()
 {
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
 	spWindow = nullptr;
+	engine->drop();
 }
 
 void EventManager::Update()

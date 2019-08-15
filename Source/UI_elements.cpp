@@ -137,7 +137,7 @@ void UI_elements::Draw()
 
     GLuint ViewProjectionLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
 	mat4 viewMatrix = translate(mat4(1.0f), mPosition);
-    mat4 projectionMatrix = glm::ortho(0.0, 1024.0, 768.0, 0.0, -1.0, 1.0);
+    mat4 projectionMatrix = glm::ortho(-0.5, 1024.0-0.5, 768.0-0.5, -0.5, -1.0, 1.0);
     mat4 viewProjectionMatrix = projectionMatrix * viewMatrix;
     glUniformMatrix4fv(ViewProjectionLocation, 1, GL_FALSE, &viewProjectionMatrix[0][0]);
     // Draw TRIANGLE #1

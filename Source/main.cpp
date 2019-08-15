@@ -13,8 +13,17 @@
 #include "Billboard.h"
 #include "TextureLoader.h"
 
+#include <iostream>
+
+
 int main(int argc, char*argv[])
 {
+
+
+
+
+
+
 	EventManager::Initialize();
 	Renderer::Initialize();
 
@@ -59,6 +68,8 @@ int main(int argc, char*argv[])
 
 	Renderer::Shutdown();
 	EventManager::Shutdown();
+
+	
 
 	return 0;
 }

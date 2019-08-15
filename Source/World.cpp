@@ -35,6 +35,8 @@
 #include "AsteroidModel.h"
 #include "UI_elements.hpp"
 
+
+
 using namespace std;
 using namespace glm;
 
@@ -265,7 +267,7 @@ void World::Update(float dt)
 			}
 		}
 	}
-	//SkyBox: updating the position of the skybox based on the camera 
+
 	(*mModel.begin())->SetPosition(GetCurrentCamera()->GetPosition());
 	if (mCurrentCamera == 3)
 	{
@@ -327,7 +329,7 @@ void World::Draw()
 	glUniform4f(LightPositionID, lightPosition.x, lightPosition.y, lightPosition.z, lightPosition.w);
 	glUniform3f(LightColorID, lightColor.r, lightColor.g, lightColor.b);
 	glUniform3f(LightAttenuationID, lightKc, lightKl, lightKq);
-	//SkyBox: disabeling depth test so that and drawing the skybox first
+
 	glDisable(GL_DEPTH_TEST);
 	(*mModel.begin())->Draw();
 	glEnable(GL_DEPTH_TEST);
@@ -340,11 +342,14 @@ void World::Draw()
 		(*it)->Draw();
 	}
 
+	glDisable(GL_DEPTH_TEST);
 	for (vector<UI_elements*>::iterator it = mUI.begin(); it < mUI.end(); ++it)
 	{
 
 		(*it)->Draw();
 	}
+	glEnable(GL_DEPTH_TEST);
+
 	glUseProgram(Renderer::GetShaderProgramID());
 	Renderer::CheckForErrors();
 	// Draw Path Lines
@@ -657,6 +662,9 @@ void World::getButtonInteraction() {
 		mUI[5]->setTexture("../Assets/Textures/10x_hover.png");
 		
 	}
+
+
+
 
 	switch (buttonState) {
 	case 0:
