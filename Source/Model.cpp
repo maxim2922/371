@@ -222,6 +222,40 @@ glm::mat4 Model::GetWorldMatrix() const
 	return parentMatrix * worldMatrix;
 }
 
+glm::mat4 Model::GetSplineWorldMatrix() 
+{
+	// @TODO 2 - You must build the world matrix from the position, scaling and rotation informations
+	//           If the model has an animation, get the world transform from the animation.
+	mat4 worldMatrix(1.0f);
+	mat4 parentMatrix(1.0f);
+	mat4 tr(1.0f);
+	mat4 r(1.0f);
+	mat4 s = glm::scale(mat4(1.0f), mScaling);
+	// Solution TRS
+#if 1
+	if (mAnimation)
+	{
+		// In this case, TR has both a rotation and translation matrix
+		tr = mAnimation->GetAnimationWorldMatrix();
+		mPosition = (-inverse(mAnimation->GetAnimationTranslationMatrix())[3]);
+		printf("%f, %f, %f \n", mPosition.x, mPosition.y, mPosition.z);
+	}
+	else
+	{
+		// Here, just a translation
+		tr = glm::translate(mat4(1.0f), mPosition);
+	}
+	if (mParent != NULL)
+	{
+		parentMatrix = mParent->GetWorldMatrix();
+	}
+#endif
+	r = glm::rotate(mat4(1.0f), glm::radians(mRotationAngleInDegrees), mRotationAxis);
+	worldMatrix = tr * r * s;
+
+	return parentMatrix * worldMatrix;
+}
+
 void Model::SetPosition(glm::vec3 position)
 {
 	mPosition = position;

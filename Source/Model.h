@@ -29,6 +29,7 @@ public:
 	void Load(ci_istringstream& iss);
 
 	virtual glm::mat4 GetWorldMatrix() const;
+	virtual glm::mat4 GetSplineWorldMatrix() ;
 
 	void SetPosition(glm::vec3 position);
 	void SetScaling(glm::vec3 scaling);

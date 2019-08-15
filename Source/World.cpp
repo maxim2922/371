@@ -194,20 +194,22 @@ void World::Update(float dt)
 
 	// Update current Camera
 	mCamera[mCurrentCamera]->Update(dt);
-	//Raycasting
+	
+	//Performs Raycasting if clicked while paused
 	if (lastMouseButtonState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS
 		&& buttonState == 2) {
-		for (vector<Model*>::iterator it = mModel.begin() + 2; it < mModel.end(); ++it)
+		for (vector<Model*>::iterator it = mModel.begin() + 3; it < mModel.end(); ++it)
 		{
 			if ((*it)->IntersectsRay(fp->GetPosition(), vec3(-inverse(GetCurrentCamera()->GetViewMatrix())[2])) == true) {
 				fp->toggleMouse(true);
-				fp->setPosition((*it)->GetPosition() + vec3(0.0f, 0.0f, 10.0f));
+				fp->setPosition((*it)->GetPosition() + ((*it)->GetRadius()+10)*vec3(0.0f, 0.0f, -1.0f));
 				fp->setLookAt((*it)->GetPosition());
 				mCurrentCamera = 0;
 				mCamera[mCurrentCamera]->Update(dt);
 			}
 		}
 	}
+	//Shoots only once per click (to avoid collision from spawning multiple asteroids in the same space)
 	else if (lastMouseButtonState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS
 		&& glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
 		if (mCurrentCamera == 3) {
@@ -221,12 +223,10 @@ void World::Update(float dt)
 	}
 	lastMouseButtonState = glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
 
-	//Check collisions
+	//Check collisions but excludes special models like skybox
 	for (vector<Model*>::iterator it = mModel.begin() +3; it < mModel.end(); ++it)
 	{
 
-		//Intersphere collisions
-		//complexity: O(n^2)
 		for (vector<Model*>::iterator it2 = it; it2 < mModel.end(); ++it2)
 		{
 
@@ -241,9 +241,9 @@ void World::Update(float dt)
 				float r2 = m2->GetRadius();
 				float totalRadii = r1 + r2;
 
-				//TODO 2 - Collisions between Models
+				//Checks for Collision between Models
 
-				if (distance <= totalRadii) //Collision
+				if (distance <= totalRadii) 
 				{
 					glm::vec3 collisionNormal = glm::normalize(m1->GetPosition() - m2->GetPosition());
 					glm::vec3 collisionPoint = m2->GetPosition() + r2 * collisionNormal;

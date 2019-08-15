@@ -1366,7 +1366,9 @@ SphereModel::~SphereModel()
 
 void SphereModel::Update(float dt)
 {
-    Model::Update(dt);
+	/*Should not be able to move sphere models so doesnt follow same update
+	Model::Update(dt);
+	*/
 }
 
 void SphereModel::Draw()
@@ -1385,7 +1387,7 @@ void SphereModel::Draw()
     glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
     GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform"); 
-    glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
+    glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetSplineWorldMatrix()[0][0]);
 
 	GLuint MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
 	glUniform4f(MaterialID, GetMaterialCoefficients().x, GetMaterialCoefficients().y, GetMaterialCoefficients().z, GetMaterialCoefficients().w);

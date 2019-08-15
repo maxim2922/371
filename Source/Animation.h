@@ -43,7 +43,8 @@ public:
     virtual void Draw();
 
     void AddKey(AnimationKey* key, float time);
-	glm::mat4 GetAnimationWorldMatrix() const;
+	glm::mat4 GetAnimationWorldMatrix()	const;
+	glm::mat4 GetAnimationTranslationMatrix();
 
 	void Load(ci_istringstream& iss);
 	ci_string GetName() const;
