@@ -13,6 +13,9 @@
 #include "ParsingHelper.h"
 #include "Billboard.h"
 #include <vector>
+#include <irrKlang.h>
+
+using namespace irrklang;
 
 class Camera;
 class Model;
@@ -64,6 +67,7 @@ private:
 	unsigned int mCurrentCamera;
 	int buttonState = 1;
 	double speed = 1;
+	bool sound = false;
 
     BillboardList* mpBillboardList;
 };

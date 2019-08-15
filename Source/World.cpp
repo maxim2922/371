@@ -22,6 +22,7 @@
 #include "Animation.h"
 #include "Billboard.h"
 #include <GLFW/glfw3.h>
+#include "UI_elements.hpp"
 #include "EventManager.h"
 #include "TextureLoader.h"
 
@@ -33,6 +34,8 @@
 #include "BSplineCamera.h"
 #include "AsteroidModel.h"
 #include "UI_elements.hpp"
+
+
 
 using namespace std;
 using namespace glm;
@@ -339,11 +342,14 @@ void World::Draw()
 		(*it)->Draw();
 	}
 
+	glDisable(GL_DEPTH_TEST);
 	for (vector<UI_elements*>::iterator it = mUI.begin(); it < mUI.end(); ++it)
 	{
 
 		(*it)->Draw();
 	}
+	glEnable(GL_DEPTH_TEST);
+
 	glUseProgram(Renderer::GetShaderProgramID());
 	Renderer::CheckForErrors();
 	// Draw Path Lines
@@ -585,6 +591,11 @@ void World::getButtonInteraction() {
 		&& EventManager::GetMousePositionY()>20 &&
 		EventManager::isClicked()) {
 		buttonState = 5;
+		mUI[0]->setTexture("../Assets/Textures/first_hover.png");
+		mUI[1]->setTexture("../Assets/Textures/ThirdPerson.png");
+		mUI[2]->setTexture("../Assets/Textures/BirdView.png");
+	
+		
 
 	}
 	if (EventManager::GetMousePositionX()<462
@@ -593,6 +604,11 @@ void World::getButtonInteraction() {
 		&& EventManager::GetMousePositionY()>20 &&
 		EventManager::isClicked()) {
 		buttonState = 4;
+		mUI[0]->setTexture("../Assets/Textures/FirstPerson.png");
+		mUI[1]->setTexture("../Assets/Textures/third_hover.png");
+		mUI[2]->setTexture("../Assets/Textures/BirdView.png");
+	
+		
 	}
 	if (EventManager::GetMousePositionX()<522
 		&& EventManager::GetMousePositionX()>462 &&
@@ -600,6 +616,12 @@ void World::getButtonInteraction() {
 		&& EventManager::GetMousePositionY()>20 &&
 		EventManager::isClicked()) {
 		buttonState = 3;
+		mUI[0]->setTexture("../Assets/Textures/FirstPerson.png");
+		mUI[1]->setTexture("../Assets/Textures/ThirdPerson.png");
+		mUI[2]->setTexture("../Assets/Textures/bird_hover.png");
+		
+		
+	
 	}
 
 	if (EventManager::GetMousePositionX()<582
@@ -608,6 +630,11 @@ void World::getButtonInteraction() {
 		&& EventManager::GetMousePositionY()>20 &&
 		EventManager::isClicked()) {
 		buttonState = 2;
+
+		mUI[3]->setTexture("../Assets/Textures/pause_hover.png");
+		mUI[4]->setTexture("../Assets/Textures/1X.png");
+		mUI[5]->setTexture("../Assets/Textures/10x.png");
+		
 	}
 
 	if (EventManager::GetMousePositionX()<642
@@ -616,6 +643,11 @@ void World::getButtonInteraction() {
 		&& EventManager::GetMousePositionY()>20 &&
 		EventManager::isClicked()) {
 		buttonState = 1;
+	
+		mUI[3]->setTexture("../Assets/Textures/PauseButton.png");
+		mUI[4]->setTexture("../Assets/Textures/1x_hover.png");
+		mUI[5]->setTexture("../Assets/Textures/10x.png");
+		
 	}
 
 	if (EventManager::GetMousePositionX()<702
@@ -624,7 +656,14 @@ void World::getButtonInteraction() {
 		&& EventManager::GetMousePositionY()>20 &&
 		EventManager::isClicked()) {
 		buttonState = 0;
+	
+		mUI[3]->setTexture("../Assets/Textures/PauseButton.png");
+		mUI[4]->setTexture("../Assets/Textures/1X.png");
+		mUI[5]->setTexture("../Assets/Textures/10x_hover.png");
+		
 	}
+
+
 
 
 	switch (buttonState) {
