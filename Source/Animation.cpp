@@ -253,3 +253,33 @@ glm::mat4 Animation::GetAnimationWorldMatrix() const
 
 	return translationMatrix * rotationMatrix;
 }
+
+
+glm::mat4 Animation::GetAnimationTranslationMatrix()
+{
+	// @TODO 4 - Find the 2 keys to interpolate the transformation (before and after current time)
+	//           Interpolate the position, scaling and rotation separately
+	//           Finally concatenate the interpolated transforms into a single
+	//           world transform and return it.
+
+	int key1 = 0, key2 = 0;
+	float normalizedTime = 0.0f;
+
+	for (int i = 1; i < (int)mKey.size(); i++)
+	{
+		if (mCurrentTime < mKeyTime[i])
+		{
+			key1 = i - 1;
+			key2 = i;
+			normalizedTime = (mCurrentTime - mKeyTime[key1]) / (mKeyTime[key2] - mKeyTime[key1]);
+		}
+	}
+
+	vec3 position = spline.GetPosition(key1 + normalizedTime);
+
+
+	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), position);
+
+
+	return translationMatrix;
+}
