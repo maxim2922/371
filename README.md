@@ -15,11 +15,11 @@ comp 371
 	- irrKlang.dll
 
 4. Project Properties/C++/General
-	Additional Include Directories: add the "include" folder in ThirdParty/irrKlang-1.6.0/include
+	* Additional Include Directories: add the "include" folder in ThirdParty/irrKlang-1.6.0/include
 5. Project Properties/Linker/Input
-	Additional Dependencies: add irrKlang.lib
+	* Additional Dependencies: add irrKlang.lib
 6. Project Properties/Linker/General
-	Additional Library Directories: add ThirdParty/lib/Win32-visualStudio
+	* Additional Library Directories: add ThirdParty/lib/Win32-visualStudio
 7. Project Properties/Build Events/Post-Build Event
-	Copy this into the Command Line: XCOPY "$(SolutionDir)"\lib*.DLL "$(TargetDir)" /D /K /Y
-	Use in Build: No
+	* Copy this into the Command Line: XCOPY "$(SolutionDir)"\lib*.DLL "$(TargetDir)" /D /K /Y
+	* Use in Build: No
