@@ -14,7 +14,7 @@ comp 371
 	- ikpMP3.dll
 	- irrKlang.dll
 
-4. Project Properties/C++/
+4. Project Properties/C++/General
 	Additional Include Directories: add the "include" folder in ThirdParty/irrKlang-1.6.0/include
 5. Project Properties/Linker/Input
 	Additional Dependencies: add irrKlang.lib
