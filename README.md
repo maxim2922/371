@@ -1,6 +1,7 @@
 # 371
 comp 371
 
+=============================================================================================================
 TO INSTALL THE IRRKLANG AUDIO LIBRARY TO THE PROJECT, FOLLOW THESE STEPS:
 
 NOTE: THIS GUIDE IS FOR VISUAL STUDIO USERS
@@ -26,3 +27,5 @@ NOTE: THIS GUIDE IS FOR VISUAL STUDIO USERS
 7. Project Properties/Build Events/Post-Build Event
 	* Copy this into the Command Line: XCOPY "$(SolutionDir)"\lib*.DLL "$(TargetDir)" /D /K /Y
 	* Use in Build: No
+
+=============================================================================================================
